@@ -1,0 +1,17 @@
+
+import { useState } from "react";
+import style from "./Protect-route.module.css";
+import { Navigate } from "react-router-dom";
+export function ProtectRoute(props) {
+  console.log(props);
+  
+ if (localStorage.getItem('userToken')) {
+ return props.children
+ }
+ else{
+  return <Navigate to={'/signIn'}></Navigate>
+ }
+
+
+ 
+}
