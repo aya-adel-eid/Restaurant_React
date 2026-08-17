@@ -7,6 +7,23 @@ import { AboutUs } from "../AboutUs/AboutUs";
 export default function Home() {
   useEffect(() => {}, []);
   //
+  const DELIVERY_FEATURES = [
+    {
+      id: 1,
+      icon: "fa-regular fa-clock",
+      title: "Delivery within 30 minutes",
+    },
+    {
+      id: 2,
+      icon: "fa-solid fa-tag",
+      title: "Best Offer & Prices",
+    },
+    {
+      id: 3,
+      icon: "fa-solid fa-headset",
+      title: "Online Services Available",
+    },
+  ];
   const SERVICES = [
     {
       id: 1,
@@ -71,6 +88,53 @@ export default function Home() {
       link: "/menu/desserts",
     },
   ];
+  const DELIVERY_APPS = [
+    {
+      id: 1,
+      name: "Uber Eats",
+      logo: "/src/assets/Group1.png",
+    },
+    {
+      id: 2,
+      name: "Grubhub",
+      logo: "/src/assets/grubhub.png",
+    },
+    {
+      id: 3,
+      name: "Postmates",
+      logo: "/src/assets/postmates.png",
+    },
+    {
+      id: 4,
+      name: "DoorDash",
+      logo: "/src/assets/doordash.png",
+    },
+    {
+      id: 5,
+      name: "Foodpanda",
+      logo: "/src/assets/foodpanda.png",
+    },
+    {
+      id: 6,
+      name: "Deliveroo",
+      logo: "/src/assets/deliveroo.png",
+    },
+    {
+      id: 7,
+      name: "Instacart",
+      logo: "/src/assets/instacar.png",
+    },
+    {
+      id: 8,
+      name: "Just Eat",
+      logo: "/src/assets/justeat.png",
+    },
+    {
+      id: 9,
+      name: "DiDi Food",
+      logo: "/src/assets/didifood.png",
+    },
+  ];
   return (
     <>
       <section>
@@ -94,7 +158,7 @@ export default function Home() {
               <span>in our welcoming, culinary haven.</span>
             </p>
             {/* buttons */}
-            <div className=" py-5 space-x-5">
+            <div className="py-5 flex flex-col sm:flex-row justify-center gap-4 sm:gap-5">
               <Link
                 to={"/bookTable"}
                 className="bg-main-500 text-white py-4 px-6 rounded-full text-lg  border-2 border-main-500
@@ -117,7 +181,7 @@ export default function Home() {
         </div>
         {/* offer */}
         <div className="bg-white">
-          <div className=" py-10 px-15 ">
+          <div className="py-10 px-4 sm:px-8 lg:px-15">
             {/* header */}
             <div className="flex flex-col justify-center items-center">
               <h4 className="text-main-500 text-xl font-semibold tracking-wide py-2 ">
@@ -132,6 +196,7 @@ export default function Home() {
               {MENU_CATEGORIES
                 ? MENU_CATEGORIES.map((cat) => (
                     <div
+                      key={cat.id}
                       className="p-8 group bg-white rounded-xl shadow-xl shadow-gray-200 flex 
                   flex-col justify-center items-center hover:-translate-y-3.5 transation-all duration-300 cursor-pointer"
                     >
@@ -167,7 +232,7 @@ export default function Home() {
         {/* about us */}
         <AboutUs></AboutUs>
         {/* services */}
-        <div className="bg-white py-10 px-15">
+        <div className="bg-white py-10 px-4 sm:px-8 lg:px-15">
           {/* header */}
           <div className="flex flex-col justify-center items-center py-4">
             <h4 className="text-main-500 text-xl font-semibold tracking-wide py-2 ">
@@ -182,12 +247,15 @@ export default function Home() {
           <div className=" grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4 gap-4 py-6">
             {SERVICES
               ? SERVICES.map((service) => (
-                  <div className="bg-white shadow-xl rounded-2xl hover:-translate-y-3.5 transation-all duration-300">
+                  <div
+                    className="bg-white shadow-xl rounded-2xl hover:-translate-y-3.5 transation-all duration-300"
+                    key={service.id}
+                  >
                     {/* image */}
                     <div>
                       <img
                         src={service.image}
-                        className="w-full h-80 object-cove rounded-t-2xl"
+                        className="w-full h-56 sm:h-64 lg:h-80 object-cove rounded-t-2xl"
                       />
                     </div>
                     <div className="py-8 text-center px-3">
@@ -201,6 +269,112 @@ export default function Home() {
                   </div>
                 ))
               : "Not Found"}
+          </div>
+        </div>
+        {/* Delivery */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 py-10 px-4 sm:px-8 lg:px-12 justify-between space-x-6">
+          {/* left */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:space-x-3.5">
+            <div className="w-full sm:w-1/2">
+              <img
+                src="/src/assets/chef.png"
+                alt="chef"
+                className="w-full h-80 sm:h-120 lg:h-163 object-cover rounded-xl"
+              />
+            </div>
+
+            <div className="w-full sm:w-1/2 space-y-6 py-2 flex flex-col justify-center">
+              <img
+                src="/src/assets/hot-pot-thai-food 1.png"
+                alt=""
+                className="w-full h-79.5 lg:h-60 object-cover rounded-xl hover:scale-110 transition duration-300"
+              />
+              <img
+                src="/src/assets/kebab-set-table 1.png"
+                alt=""
+                className="w-full h-79.5 lg:h-60 object-cover rounded-xl hover:scale-110 transition duration-300"
+              />
+            </div>
+          </div>
+          {/* right */}
+          <div className=" lg:px-8 flex flex-col items-center">
+            <div>
+              <div>
+                <h5 className="text-main-500 font-semibold text-[18px] uppercase py-2.5">
+                  Lightning Fast Delivery
+                </h5>
+                <h2 className="text-3xl lg:text-5xl font-bold">
+                  <span className="text-[#474747]">Fastest </span>
+
+                  <span className="text-main-500 pt-1.5">
+                    Food Delivery in City
+                  </span>
+                </h2>
+                <p className="text-gray-500 text-[20px] py-3 pt-12 w-full lg:w-137.5">
+                  Our visual designer lets you quickly and drag your way to
+                  custom apps for both desktop and mobile, keeping you fed in
+                  record time.
+                </p>
+              </div>
+              <div className="py-5 flex flex-col gap-6">
+                {DELIVERY_FEATURES.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center gap-6 py-6 group border-4 border-transparent
+   hover:border-main-600 hover:bg-gray-200 px-6 rounded-3xl hover:translate-x-3.5 transition-all duration-300"
+                  >
+                    {/* icon */}
+                    <div
+                      className="size-12 flex justify-center items-center rounded-full
+                   bg-main-500 text-white text-[20px] group-hover:text-main-500
+                    group-hover:border-4 group-hover:border-dashed group-hover:border-main-500
+                     transation-all duration-300 group-hover:bg-white"
+                    >
+                      <i className={item.icon}></i>
+                    </div>
+                    <h2 className="text-xl font-medium ">{item.title}</h2>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* order online */}
+        <div className="py-20 px-4 lg:px-15 bg-white flex flex-col lg:flex-row gap-5">
+          {/* left */}
+          <div className="w-full lg:w-[30%] flex flex-col justify-center gap-4">
+            {/* header */}
+            <div>
+              <h5 className="text-main-500 font-semibold text-[14px]  lg:text-[18px] uppercase py-2.5">
+                Order Online
+              </h5>
+              <h2 className="text-4xl lg:text-5xl font-bold">
+                <span className="text-[#474747]">Order Through </span>
+
+                <span className="text-main-500 pt-1.5">Your App</span>
+              </h2>
+              <p className="text-gray-500 text-sm lg:text-[14px] py-3 pt-12 lg:w-100">
+                Can't make it in? No problem. Order your favourite dishes
+                through your preferred delivery app and enjoy restaurant-quality
+                food from the comfort of home.
+              </p>
+            </div>
+          </div>
+          <div className="lg:w-[70%] lg:px-10">
+            <div className=" grid grid-cols-2 lg:grid-cols-3 gap-4 justify-center">
+              {DELIVERY_APPS.map((item) => (
+                <div
+                  className="bg-white p-8 shadow-sm rounded-2xl text-center border-2 border-transparent
+                   hover:border-2 hover:border-main-500 hover:-translate-y-3 transation-all duration-300 cursor-pointer"
+                  key={item.id}
+                >
+                  <div className="flex justify-center">
+                    <img src={item.logo} alt={item.name} className=" w-1/2" />
+                  </div>
+                  <h3 className="text-xl font-semibold py-4">{item.name}</h3>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
