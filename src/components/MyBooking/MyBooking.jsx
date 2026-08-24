@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import style from "./MyBooking.module.css";
 import Header from "../Shared/header/Header";
 import { Alert, TabItem, Tabs } from "flowbite-react";
 import axios from "axios";
 import { Circles } from "react-loader-spinner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function MyBooking() {
   const STATUS_STYLES = {
@@ -13,30 +14,39 @@ export function MyBooking() {
   };
 
   const Status = ["All", "pending", "confirmed", "cancelled"];
-  const [myBookings, setAllBookgings] = useState(null);
-  const [displayMyBookings, setAllBookingsDisplay] = useState([]);
   const token = localStorage.getItem("userToken");
   const [currentStatus, setCurrentStatus] = useState("All");
+  const queryClient = useQueryClient();
+
+  const { data: myBookings, isLoading } = useQuery({
+    queryKey: ["getAllBookingsUser"],
+    queryFn: getAllBookings,
+  });
 
   function getAllBookings() {
-    axios
+    return axios
       .get(`https://restaurant-project-node-js.vercel.app/api/booking/my`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((resp) => {
-        setAllBookgings(resp.data.data);
-        console.log(resp.data);
-        setAllBookingsDisplay(resp.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then((resp) => resp.data.data);
   }
-  function Cansalation(id) {
-    axios
-      .patch(
+
+  const displayMyBookings =
+    currentStatus === "All"
+      ? (myBookings ?? [])
+      : (myBookings ?? []).filter(
+          (booking) => booking.status === currentStatus,
+        );
+
+  const {
+    mutate: cancelBooking,
+    isPending: isCancelPending,
+    variables: cancellingId,
+  } = useMutation({
+    mutationFn: (id) =>
+      axios.patch(
         `https://restaurant-project-node-js.vercel.app/api/booking/${id}/cancel`,
         {},
         {
@@ -44,28 +54,19 @@ export function MyBooking() {
             Authorization: `Bearer ${token}`,
           },
         },
-      )
-      .then((resp) => {
-        console.log(resp);
-        const updatedBookings = myBookings.map((booking) =>
-          booking._id === id ? { ...booking, status: "cancelled" } : booking,
-        );
-        setAllBookgings(updatedBookings);
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getAllBookingsUser"] });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
-        if (currentStatus === "All") {
-          setAllBookingsDisplay(updatedBookings);
-        } else {
-          setAllBookingsDisplay(
-            updatedBookings.filter(
-              (booking) => booking.status === currentStatus,
-            ),
-          );
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  function handleCancelBooking(id) {
+    cancelBooking(id);
   }
+
   function formatDate(isoString) {
     if (!isoString) return "";
     return new Date(isoString).toLocaleDateString("en-US", {
@@ -74,18 +75,11 @@ export function MyBooking() {
       year: "numeric",
     });
   }
+
   function getMyBookingByStatu(statu = "All") {
     setCurrentStatus(statu);
-    const allBooking = structuredClone(myBookings);
-    if (statu === "All") {
-      setAllBookingsDisplay(allBooking);
-      return;
-    }
-    const fillterByStatu = allBooking.filter(
-      (booking) => booking.status === statu,
-    );
-    setAllBookingsDisplay(fillterByStatu);
   }
+
   function canCancel(booking) {
     const bookingDateTime = new Date(booking.date);
     const [hours, minutes] = booking.time.split(":").map(Number);
@@ -97,13 +91,10 @@ export function MyBooking() {
     return diffInHours >= 24;
   }
 
-  useEffect(() => {
-    getAllBookings();
-  }, []);
   return (
     <>
       <section className="flex flex-col min-h-screen">
-        {myBookings ? (
+        {!isLoading && myBookings ? (
           <div>
             <Header
               hightlight={"Your history"}
@@ -200,7 +191,7 @@ export function MyBooking() {
                       </p>
                       <p className="flex items-center gap-3 text-gray-700">
                         <i className="fa-regular fa-calendar text-main-600 w-4"></i>
-                        {formatDate(booking.updatedAt)}
+                        {formatDate(booking.date)}
                       </p>
                       <p className="flex items-center gap-3 text-gray-700">
                         <i className="fa-regular fa-clock text-main-600 w-4"></i>
@@ -234,12 +225,21 @@ export function MyBooking() {
                         </p>
                       ) : (
                         <button
-                          onClick={() => Cansalation(booking._id)}
+                          onClick={() => handleCancelBooking(booking._id)}
+                          disabled={
+                            isCancelPending && cancellingId === booking._id
+                          }
                           className="w-full border border-red-400 text-red-500 font-semibold py-2.5 rounded-lg
-    flex items-center justify-center gap-2 hover:bg-red-50 transition-all duration-300"
+    flex items-center justify-center gap-2 hover:bg-red-50 transition-all duration-300 disabled:opacity-50"
                         >
-                          <i className="fa-solid fa-xmark"></i>
-                          Cancel Reservation
+                          {isCancelPending && cancellingId === booking._id ? (
+                            <i className="fa-solid fa-spinner fa-spin"></i>
+                          ) : (
+                            <i className="fa-solid fa-xmark"></i>
+                          )}
+                          {isCancelPending && cancellingId === booking._id
+                            ? "Cancelling..."
+                            : "Cancel Reservation"}
                         </button>
                       )}
                     </div>

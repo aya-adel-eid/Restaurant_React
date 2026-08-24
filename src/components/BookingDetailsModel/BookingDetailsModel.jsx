@@ -7,6 +7,8 @@ export function BookingDetailsModel({
   formatDate,
   statusStyles,
   flag,
+  isConfirmPending = false,
+  isCancelPending = false,
 }) {
   return (
     <>
@@ -105,26 +107,40 @@ export function BookingDetailsModel({
               <button
                 className="px-4 py-0.5 rounded-2xl bg-green-600 w-full justify-center cursor-pointer
              text-white disabled:bg-gray-600/50 flex  items-center gap-1.5 "
-                disabled={booking.status === "cancelled"}
+                disabled={
+                  booking.status === "cancelled" ||
+                  isConfirmPending ||
+                  isCancelPending
+                }
                 onClick={() => onConfirm(booking._id)}
               >
                 <span>
-                  {" "}
-                  <i className="fa-regular fa-circle-check"></i>
+                  {isConfirmPending ? (
+                    <i className="fa-solid fa-spinner fa-spin"></i>
+                  ) : (
+                    <i className="fa-regular fa-circle-check"></i>
+                  )}
                 </span>
-                <span>Confirme</span>
+                <span>{isConfirmPending ? "Confirming..." : "Confirm"}</span>
               </button>
               <button
                 className="px-4 py-0.5 rounded-2xl bg-red-600 w-full justify-center cursor-pointer
              text-white disabled:bg-red-600/50 flex  items-center gap-1.5 "
-                disabled={booking.status === "cancelled"}
+                disabled={
+                  booking.status === "cancelled" ||
+                  isCancelPending ||
+                  isConfirmPending
+                }
                 onClick={() => onCancel(booking._id)}
               >
                 <span>
-                  {" "}
-                  <i className="fa-regular fa-circle-xmark"></i>
+                  {isCancelPending ? (
+                    <i className="fa-solid fa-spinner fa-spin"></i>
+                  ) : (
+                    <i className="fa-regular fa-circle-xmark"></i>
+                  )}
                 </span>
-                <span>Cancel</span>
+                <span>{isCancelPending ? "Cancelling..." : "Cancel"}</span>
               </button>
             </div>
           </div>

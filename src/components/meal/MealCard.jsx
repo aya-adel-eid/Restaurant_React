@@ -1,4 +1,3 @@
-import { Card } from "flowbite-react";
 import { Link } from "react-router-dom";
 
 export default function MealCard({
@@ -11,20 +10,24 @@ export default function MealCard({
 }) {
   return (
     <>
-      <Link to={`/mealDetails/${ID}/${category}`}>
-        <div className="rounded-lg  shadow-md overflow-hidden">
-          <img src={image} alt={title} className="w-full h-60 " />
+      <Link to={`/mealDetails/${ID}/${category}`} className="h-full block">
+        <div className="rounded-lg shadow-md overflow-hidden h-full flex flex-col">
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-60 object-cover shrink-0"
+          />
           <div className="p-3 flex flex-col flex-1">
-            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-1">
               {title}
             </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
+            <p className="font-normal text-gray-700 dark:text-gray-400 line-clamp-2">
               {descrip}
             </p>
+            <span className="text-lg font-bold text-main-500 text-center block py-2 mt-auto pt-3 ">
+              ${price}
+            </span>
           </div>
-          <span className="text-lg font-bold text-main-500 text-center block py-2 mt-auto pt-3 ">
-            ${price}
-          </span>
         </div>
       </Link>
     </>

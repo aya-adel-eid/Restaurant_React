@@ -1,10 +1,13 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import style from "./BookingTable.module.css";
 import Header from "../Shared/header/Header";
 import { useFormik } from "formik";
 import * as YUp from "yup";
 import axios from "axios";
 export function BookingTable() {
+  const [loading, setLoading] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // "success" | "error" | null
+
   const yup = YUp.object().shape({
     name: YUp.string().required().min(3, "Minimum 3 characters."),
     date: YUp.date()
@@ -30,8 +33,9 @@ export function BookingTable() {
 
   //
   function bookingTable(bookingInfo) {
-    console.log(bookingInfo);
     const token = localStorage.getItem("userToken");
+    setLoading(true);
+    setSubmitStatus(null);
 
     axios
       .post(
@@ -44,14 +48,22 @@ export function BookingTable() {
         },
       )
       .then((resp) => {
-        console.log(resp.date.date);
+        console.log(resp.data.data);
+        setSubmitStatus("success");
+        formik.resetForm();
+      })
+      .catch((error) => {
+        console.log(error.response?.data?.error ?? error.message);
+        setSubmitStatus("error");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
-  useEffect(() => {}, []);
   return (
     <>
-      <section id="Booktable" className="">
+      <section id="Booktable" className="bg-[#FBF7F2]">
         {/* header */}
         <Header
           hightlight={"Reserve your seat"}
@@ -62,140 +74,209 @@ export function BookingTable() {
             " with fresh flavors, exceptional service, and a warm atmosphere."
           }
         ></Header>
-        <div className="py-8 px-8">
-          <div className=" p-12 bg-white shadow-lg rounded-4xl">
-            <form className="w-full" onSubmit={formik.handleSubmit}>
-              <div className="space-y-2 grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+        <div className="py-8 sm:py-12 px-4 sm:px-6 lg:px-10">
+          <div className="max-w-4xl mx-auto relative bg-white shadow-xl shadow-black/5 rounded-3xl sm:rounded-4xl overflow-hidden">
+            <div className="h-2 bg-gradient-to-r from-main-500 to-main-600"></div>
+
+            <form
+              className="w-full p-5 sm:p-8 lg:p-12"
+              onSubmit={formik.handleSubmit}
+              noValidate
+            >
+              <div className="flex items-center gap-2 pb-6 sm:pb-8">
+                <span className="size-10 shrink-0 rounded-full bg-main-500/10 text-main-500 flex items-center justify-center text-lg">
+                  <i className="fa-solid fa-utensils"></i>
+                </span>
+                <div>
+                  <h3 className="font-semibold text-gray-800 text-base sm:text-lg leading-tight">
+                    Reservation Details
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-400">
+                    Fill in your details to hold your table
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 {/* date */}
                 <div>
-                  <label className="font-semibold text-gray-700 text-lg px-1.5 py-5">
+                  <label
+                    htmlFor="booking-date"
+                    className="font-semibold text-gray-700 text-sm sm:text-base block mb-2"
+                  >
                     Date
                   </label>
-
-                  <input
-                    type="date"
-                    name="date"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.date}
-                    className=" w-full h-14 rounded-2xl border border-gray-200 bg-white px-5 text-gray-700 shadow-sm outline-none transition-all
-      duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100 "
-                  />
+                  <div className="relative">
+                    <i className="fa-regular fa-calendar absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                      id="booking-date"
+                      type="date"
+                      name="date"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.date}
+                      className="w-full h-13 sm:h-14 rounded-2xl border border-gray-200 bg-white pl-11 pr-4 text-sm sm:text-base text-gray-700 shadow-sm outline-none transition-all duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100"
+                    />
+                  </div>
                   {(formik.touched.date || formik.values.date) &&
                   formik.errors.date ? (
-                    <p className="py-3 px-1.5s text-red-500 font-medium">
+                    <p className="mt-1.5 px-1 text-red-500 font-medium text-xs sm:text-sm">
                       {formik.errors.date}
                     </p>
                   ) : null}
                 </div>
                 {/* time */}
                 <div>
-                  <label className="font-semibold text-gray-700 text-lg px-1.5 py-5">
+                  <label
+                    htmlFor="booking-time"
+                    className="font-semibold text-gray-700 text-sm sm:text-base block mb-2"
+                  >
                     Time
                   </label>
-
-                  <input
-                    type="time"
-                    name="time"
-                    value={formik.values.time}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className=" w-full h-14 rounded-2xl border border-gray-200 bg-white px-5 text-gray-700 shadow-sm outline-none transition-all
-      duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100 "
-                  />
+                  <div className="relative">
+                    <i className="fa-regular fa-clock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                      id="booking-time"
+                      type="time"
+                      name="time"
+                      value={formik.values.time}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full h-13 sm:h-14 rounded-2xl border border-gray-200 bg-white pl-11 pr-4 text-sm sm:text-base text-gray-700 shadow-sm outline-none transition-all duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100"
+                    />
+                  </div>
                   {(formik.touched.time || formik.values.time) &&
                   formik.errors.time ? (
-                    <p className="py-3 px-1.5s text-red-500 font-medium">
+                    <p className="mt-1.5 px-1 text-red-500 font-medium text-xs sm:text-sm">
                       {formik.errors.time}
                     </p>
                   ) : null}
                 </div>
                 {/* name */}
                 <div>
-                  <label className="font-semibold text-gray-700 text-lg px-1.5 py-5">
+                  <label
+                    htmlFor="booking-name"
+                    className="font-semibold text-gray-700 text-sm sm:text-base block mb-2"
+                  >
                     Name
                   </label>
-
-                  <input
-                    name="name"
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    type="text"
-                    placeholder="Enter your name "
-                    className=" w-full h-14 rounded-2xl border border-gray-200 bg-white px-5 text-gray-700 shadow-sm outline-none transition-all
-      duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100 "
-                  />
+                  <div className="relative">
+                    <i className="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                      id="booking-name"
+                      name="name"
+                      value={formik.values.name}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      type="text"
+                      placeholder="Enter your name"
+                      className="w-full h-13 sm:h-14 rounded-2xl border border-gray-200 bg-white pl-11 pr-4 text-sm sm:text-base text-gray-700 shadow-sm outline-none transition-all duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100"
+                    />
+                  </div>
                   {(formik.touched.name || formik.values.name) &&
                   formik.errors.name ? (
-                    <p className="py-3 px-1.5s text-red-500 font-medium">
+                    <p className="mt-1.5 px-1 text-red-500 font-medium text-xs sm:text-sm">
                       {formik.errors.name}
                     </p>
                   ) : null}
                 </div>
                 {/* phone */}
                 <div>
-                  <label className="font-semibold text-gray-700 text-lg px-1.5 py-5">
+                  <label
+                    htmlFor="booking-phone"
+                    className="font-semibold text-gray-700 text-sm sm:text-base block mb-2"
+                  >
                     Phone
                   </label>
-
-                  <input
-                    type="tel"
-                    placeholder="Enter your number "
-                    name="phone"
-                    value={formik.values.phone}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className=" w-full h-14 rounded-2xl border border-gray-200 bg-white px-5 text-gray-700 shadow-sm outline-none transition-all
-      duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100 "
-                  />
+                  <div className="relative">
+                    <i className="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                      id="booking-phone"
+                      type="tel"
+                      placeholder="Enter your number"
+                      name="phone"
+                      value={formik.values.phone}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full h-13 sm:h-14 rounded-2xl border border-gray-200 bg-white pl-11 pr-4 text-sm sm:text-base text-gray-700 shadow-sm outline-none transition-all duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100"
+                    />
+                  </div>
                   {(formik.touched.phone || formik.values.phone) &&
                   formik.errors.phone ? (
-                    <p className="py-3 px-1.5s text-red-500 font-medium">
+                    <p className="mt-1.5 px-1 text-red-500 font-medium text-xs sm:text-sm">
                       {formik.errors.phone}
                     </p>
                   ) : null}
                 </div>
 
-                <div>
-                  <label className="font-semibold text-gray-700 text-lg px-1.5 pb-3 block">
-                    Select number of gust
-                  </label>
-
-                  <select
-                    name="persons"
-                    value={formik.values.persons}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    type="tel"
-                    placeholder="Enter your number "
-                    className=" w-full h-14 rounded-2xl border border-gray-200 bg-white px-5 text-gray-700 shadow-sm outline-none transition-all
-      duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100 "
+                {/* persons */}
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="booking-persons"
+                    className="font-semibold text-gray-700 text-sm sm:text-base block mb-2"
                   >
-                    <option value="" disabled>
-                      Select an option
-                    </option>
-                    <option value="1">1 Guest</option>
-                    <option value="2">2 Guests</option>
-                    <option value="3">3 Guests</option>
-                    <option value="4">4 Guests</option>
-                  </select>
+                    Number of Guests
+                  </label>
+                  <div className="relative">
+                    <i className="fa-solid fa-champagne-glasses absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <select
+                      id="booking-persons"
+                      name="persons"
+                      value={formik.values.persons}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full h-13 sm:h-14 rounded-2xl border border-gray-200 bg-white pl-11 pr-4 text-sm sm:text-base text-gray-700 shadow-sm outline-none transition-all duration-300 focus:border-main-500 focus:ring-4 focus:ring-main-100 appearance-none"
+                    >
+                      <option value="" disabled>
+                        Select an option
+                      </option>
+                      <option value="1">1 Guest</option>
+                      <option value="2">2 Guests</option>
+                      <option value="3">3 Guests</option>
+                      <option value="4">4 Guests</option>
+                    </select>
+                    <i className="fa-solid fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+                  </div>
                   {(formik.touched.persons || formik.values.persons) &&
                   formik.errors.persons ? (
-                    <p className="py-3 px-1.5s text-red-500 font-medium">
+                    <p className="mt-1.5 px-1 text-red-500 font-medium text-xs sm:text-sm">
                       {formik.errors.persons}
                     </p>
                   ) : null}
                 </div>
               </div>
 
-              <div className="p-4">
+              {/* submit feedback */}
+              {submitStatus === "success" && (
+                <div className="mt-5 flex items-center gap-2.5 rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 text-sm font-medium">
+                  <i className="fa-solid fa-circle-check"></i>
+                  Your table is reserved! We'll see you soon.
+                </div>
+              )}
+              {submitStatus === "error" && (
+                <div className="mt-5 flex items-center gap-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm font-medium">
+                  <i className="fa-solid fa-triangle-exclamation"></i>
+                  Something went wrong. Please try again.
+                </div>
+              )}
+
+              <div className="pt-6">
                 <button
                   type="submit"
-                  className="py-3 cursor-pointer px-6 w-full text-center
-           bg-main-500 text-lg tracking-widest lg:text-xl font-bold text-white rounded-4xl"
+                  disabled={loading}
+                  className="py-3.5 cursor-pointer px-6 w-full text-center
+           bg-main-500 text-base sm:text-lg tracking-wide font-bold text-white rounded-full
+           hover:bg-main-600 disabled:bg-main-300 flex items-center justify-center gap-2 transition-all duration-300"
                 >
-                  Confirm reservation
+                  {loading ? (
+                    <i className="fa-solid fa-spinner fa-spin"></i>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-check"></i>
+                      <span>Confirm Reservation</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
