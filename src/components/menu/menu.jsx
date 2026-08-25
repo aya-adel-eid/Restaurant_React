@@ -10,6 +10,8 @@ import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
 
 export function Menu() {
   let [active, setActivatecategory] = useState("all");
+  console.log(active);
+
   function getAllCategories() {
     return axios.get(
       `https://restaurant-project-node-js.vercel.app/api/category`,
