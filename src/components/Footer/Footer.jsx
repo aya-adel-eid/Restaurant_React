@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import style from "./Footer.module.css";
+import pasta from "../../assets/pasta.png";
+import potato from "../../assets/potato.png";
+import pancake from "../../assets/pancake.png";
+import ltbeta from "../../assets/5ltbeta.png";
 import { Link } from "react-router-dom";
 export function Footer() {
   const [counter, setCounter] = useState(0);
@@ -109,22 +113,22 @@ export function Footer() {
             <h3 className="text-xl font-bold mb-6">Follow Us On Instagram</h3>
             <div className="grid grid-cols-2 gap-3">
               <img
-                src="/src/assets/pasta.png"
+                src={pasta}
                 alt=""
                 className="w-full h-32 object-cover rounded-lg"
               />
               <img
-                src="/src/assets/potato.png"
+                src={potato}
                 alt=""
                 className="w-full h-32 object-cover rounded-lg"
               />
               <img
-                src="/src/assets/pancake.png"
+                src={pancake}
                 alt=""
                 className="w-full h-32 object-cover rounded-lg"
               />
               <img
-                src="/src/assets/5ltbeta.png"
+                src={ltbeta}
                 alt=""
                 className="w-full h-32 object-cover rounded-lg"
               />
