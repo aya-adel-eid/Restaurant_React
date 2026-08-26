@@ -1,8 +1,29 @@
 import { useEffect } from "react";
 import style from "./Home.module.css";
-import Header from "../Shared/header/Header";
+
 import { Link } from "react-router-dom";
 import { AboutUs } from "../AboutUs/AboutUs";
+
+// Services images
+import kebabSetTable from "../../assets/kebab-set-table 1.png";
+import birthdayImg from "../../assets/charming-female-blowing-candles-birthday-.png";
+import weddingImg from "../../assets/happy-man-wife-sunny-day 1.png";
+import eventsImg from "../../assets/group.png";
+
+// Delivery section images
+import chefImg from "../../assets/chef.png";
+import hotPotImg from "../../assets/hot-pot-thai-food 1.png";
+
+// Delivery apps logos
+import uberEatsLogo from "../../assets/Group1.png";
+import grubhubLogo from "../../assets/grubhub.png";
+import postmatesLogo from "../../assets/postmates.png";
+import doordashLogo from "../../assets/doordash.png";
+import foodpandaLogo from "../../assets/foodpanda.png";
+import deliverooLogo from "../../assets/deliveroo.png";
+import instacartLogo from "../../assets/instacar.png";
+import justeatLogo from "../../assets/justeat.png";
+import didifoodLogo from "../../assets/didifood.png";
 
 export default function Home() {
   useEffect(() => {}, []);
@@ -27,28 +48,28 @@ export default function Home() {
   const SERVICES = [
     {
       id: 1,
-      image: "/src/assets/kebab-set-table 1.png",
+      image: kebabSetTable,
       title: "Caterings",
       description:
         "In the new era of technology we look in the future with certainty for life.",
     },
     {
       id: 2,
-      image: "/src/assets/charming-female-blowing-candles-birthday-.png",
+      image: birthdayImg,
       title: "Birthdays",
       description:
         "In the new era of technology we look in the future with certainty for life.",
     },
     {
       id: 3,
-      image: "/src/assets/happy-man-wife-sunny-day 1.png",
+      image: weddingImg,
       title: "Weddings",
       description:
         "In the new era of technology we look in the future with certainty for life.",
     },
     {
       id: 4,
-      image: "/src/assets/group.png",
+      image: eventsImg,
       title: "Events",
       description:
         "In the new era of technology we look in the future with certainty for life.",
@@ -92,47 +113,47 @@ export default function Home() {
     {
       id: 1,
       name: "Uber Eats",
-      logo: "/src/assets/Group1.png",
+      logo: uberEatsLogo,
     },
     {
       id: 2,
       name: "Grubhub",
-      logo: "/src/assets/grubhub.png",
+      logo: grubhubLogo,
     },
     {
       id: 3,
       name: "Postmates",
-      logo: "/src/assets/postmates.png",
+      logo: postmatesLogo,
     },
     {
       id: 4,
       name: "DoorDash",
-      logo: "/src/assets/doordash.png",
+      logo: doordashLogo,
     },
     {
       id: 5,
       name: "Foodpanda",
-      logo: "/src/assets/foodpanda.png",
+      logo: foodpandaLogo,
     },
     {
       id: 6,
       name: "Deliveroo",
-      logo: "/src/assets/deliveroo.png",
+      logo: deliverooLogo,
     },
     {
       id: 7,
       name: "Instacart",
-      logo: "/src/assets/instacar.png",
+      logo: instacartLogo,
     },
     {
       id: 8,
       name: "Just Eat",
-      logo: "/src/assets/justeat.png",
+      logo: justeatLogo,
     },
     {
       id: 9,
       name: "DiDi Food",
-      logo: "/src/assets/didifood.png",
+      logo: didifoodLogo,
     },
   ];
   return (
@@ -277,7 +298,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 sm:space-x-3.5">
             <div className="w-full sm:w-1/2">
               <img
-                src="/src/assets/chef.png"
+                src={chefImg}
                 alt="chef"
                 className="w-full h-80 sm:h-120 lg:h-163 object-cover rounded-xl"
               />
@@ -285,12 +306,12 @@ export default function Home() {
 
             <div className="w-full sm:w-1/2 space-y-6 py-2 flex flex-col justify-center">
               <img
-                src="/src/assets/hot-pot-thai-food 1.png"
+                src={hotPotImg}
                 alt=""
                 className="w-full h-79.5 lg:h-60 object-cover rounded-xl hover:scale-110 transition duration-300"
               />
               <img
-                src="/src/assets/kebab-set-table 1.png"
+                src={kebabSetTable}
                 alt=""
                 className="w-full h-79.5 lg:h-60 object-cover rounded-xl hover:scale-110 transition duration-300"
               />

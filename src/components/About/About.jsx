@@ -3,6 +3,7 @@ import style from "./About.module.css";
 import Header from "../Shared/header/Header";
 import { AboutUs } from "../AboutUs/AboutUs";
 import { Link } from "react-router-dom";
+import aboutImage from "../../assets/aboutImage.png";
 
 export function About() {
   const [counter, setCounter] = useState(0);
@@ -85,7 +86,7 @@ export function About() {
           {/* left image */}
           <div className=" relative w-full h-160 lg:px-8">
             <img
-              src="/src/assets/aboutImage.png"
+              src={aboutImage}
               className="w-full h-full object-cover rounded-xl"
             />
             <div className="bg-[#474747] rounded-xl p-6 w-fit absolute -right-8 -bottom-10">

@@ -4,6 +4,7 @@ import pasta from "../../assets/pasta.png";
 import potato from "../../assets/potato.png";
 import pancake from "../../assets/pancake.png";
 import ltbeta from "../../assets/5ltbeta.png";
+import LogoFooter from "../../assets/Logo-footer.png";
 import { Link } from "react-router-dom";
 export function Footer() {
   const [counter, setCounter] = useState(0);
@@ -15,11 +16,7 @@ export function Footer() {
           {/* Logo & Description */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img
-                src="/src/assets/Logo-footer.png"
-                alt="Bistro Bliss"
-                className="w-60 h-20"
-              />
+              <img src={LogoFooter} alt="Bistro Bliss" className="w-60 h-20" />
               {/* <h2 className="text-2xl font-bold">Bistro Bliss</h2> */}
             </div>
             <p className="text-gray-300 mb-6 max-w-sm">
