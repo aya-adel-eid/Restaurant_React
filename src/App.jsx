@@ -9,9 +9,9 @@ import { Login } from "./components/Login/Login";
 import { Logup } from "./components/Logup/Logup";
 import { ProtectRoute } from "./components/Protect-route/Protect-route";
 import { ProtectRoteLogged } from "./components/ProtectRoteLogged/ProtectRoteLogged";
-
+import { Menu } from "./components/menu/Menu";
 import UserContextProvider from "./assets/context/UserContext";
-import { Menu } from "./components/menu/menu";
+
 import { CardDetails } from "./components/CardDetails/CardDetails";
 import { BookingTable } from "./components/BookingTable/BookingTable";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
