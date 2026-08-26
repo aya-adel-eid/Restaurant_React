@@ -25,6 +25,7 @@ import { ProtectRouteFromAdmin } from "./components/ProtectRouteFromAdmin/Protec
 import { Messages } from "./components/Messages/Messages";
 import { BookingsAdmin } from "./components/BookingsAdmin/BookingsAdmin";
 import { MenuAdmin } from "./components/MenuAdmin/MenuAdmin";
+import { ScrollToTop } from "./components/Scrolltotop/Scrolltotop";
 
 function App() {
   const routes = createBrowserRouter([
@@ -138,7 +139,9 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <UserContextProvider>
           <ReactQueryDevtools initialIsOpen={false} />
-          <RouterProvider router={routes}></RouterProvider>
+          <ScrollToTop router={routes}>
+            <RouterProvider router={routes}></RouterProvider>
+          </ScrollToTop>
         </UserContextProvider>
       </QueryClientProvider>
     </>
