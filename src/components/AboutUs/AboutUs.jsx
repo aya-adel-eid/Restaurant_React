@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import style from "./AboutUs.module.css";
 import { Link } from "react-router-dom";
+import aboutImage from "../../assets/aboutImage.png";
+
 export function AboutUs() {
   useEffect(() => {}, []);
   return (
@@ -9,7 +11,7 @@ export function AboutUs() {
         {/* left image */}
         <div className=" relative w-full h-160 lg:px-8">
           <img
-            src="/src/assets/aboutImage.png"
+            src={aboutImage}
             className="w-full h-full object-cover rounded-xl"
           />
           <div className="bg-[#474747] rounded-xl p-6 w-fit absolute -right-8 -bottom-10">
