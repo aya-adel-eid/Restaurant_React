@@ -12,7 +12,7 @@ export function LayoutAdmin() {
         <div className="flex flex-col justify-between min-h-screen">
           <NavBar></NavBar>
 
-          <div className="pt-16 bg-[#F7F7F7] grow ">
+          <div className="pt-14 bg-[#F7F7F7] grow ">
             <Outlet></Outlet>
           </div>
           <Footer></Footer>

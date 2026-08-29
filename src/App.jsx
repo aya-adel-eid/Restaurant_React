@@ -26,6 +26,7 @@ import { Messages } from "./components/Messages/Messages";
 import { BookingsAdmin } from "./components/BookingsAdmin/BookingsAdmin";
 import { MenuAdmin } from "./components/MenuAdmin/MenuAdmin";
 import { ScrollToTop } from "./components/Scrolltotop/Scrolltotop";
+import { Bounce, ToastContainer } from "react-toastify";
 
 function App() {
   const routes = createBrowserRouter([
@@ -144,6 +145,20 @@ function App() {
           </ScrollToTop>
         </UserContextProvider>
       </QueryClientProvider>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </>
   );
 }

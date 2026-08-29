@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import style from "./Blog.module.css";
 import Header from "../Shared/header/Header";
 import pasta from "../../assets/pasta2.png";
@@ -7,6 +7,7 @@ import pancake from "../../assets/pancake (1).png";
 import ltbeta from "../../assets/5ltbeta (1).png";
 import potato from "../../assets/potato (1).png";
 import { TabItem, Tabs } from "flowbite-react";
+import { Helmet } from "react-helmet";
 
 export function Blog() {
   const BLOG_CATEGORIES = [
@@ -90,13 +91,11 @@ export function Blog() {
     setBlogCategoryDisplay(fillterByCatgory);
   }
 
-  const [counter, setCounter] = useState(0);
-  useEffect(() => {
-    console.log("mount");
-  }, []);
-
   return (
     <>
+      <Helmet>
+        <title>Blog page</title>
+      </Helmet>
       <section>
         <Header
           hightlight={"Latest Updates"}

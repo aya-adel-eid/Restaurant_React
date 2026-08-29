@@ -24,6 +24,7 @@ import deliverooLogo from "../../assets/deliveroo.png";
 import instacartLogo from "../../assets/instacar.png";
 import justeatLogo from "../../assets/justeat.png";
 import didifoodLogo from "../../assets/didifood.png";
+import { Helmet } from "react-helmet";
 
 export default function Home() {
   useEffect(() => {}, []);
@@ -158,6 +159,9 @@ export default function Home() {
   ];
   return (
     <>
+      <Helmet>
+        <title>Home page</title>
+      </Helmet>
       <section className="overflow-x-hidden">
         {/* home */}
         <div

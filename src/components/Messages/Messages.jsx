@@ -11,7 +11,9 @@ import {
 
 import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
 import { useQuery } from "@tanstack/react-query";
-import InitialisName from "../Shared/InitialisName";
+import { formatDate, InitialisName } from "../Shared/utils/utils";
+import { Helmet } from "react-helmet";
+
 export function Messages() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
@@ -58,14 +60,6 @@ export function Messages() {
   }
 
   const onPageChange = (page) => setCurrentPage(page);
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    return new Date(dateStr).toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
 
   if (isLoading) {
     return (
@@ -87,7 +81,10 @@ export function Messages() {
 
   return (
     <>
-      <section className="px-4 sm:px-8 lg:px-15 py-8 min-h-screen flex flex-col">
+      <Helmet>
+        <title>Messages</title>
+      </Helmet>
+      <section className="px-4 sm:px-8 lg:px-15 py-8 min-h-screen flex flex-col bg-bgMain">
         <div>
           <div className="flex flex-col justify-center items-between  lg:flex-row lg:justify-between lg:items-center">
             {/* headers */}

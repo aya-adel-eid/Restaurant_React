@@ -1,23 +1,21 @@
-import { useState } from "react";
 import style from "./BookingTable.module.css";
 import Header from "../Shared/header/Header";
 import { useFormik } from "formik";
 import * as YUp from "yup";
 import axios from "axios";
+import { Helmet } from "react-helmet";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+const yup = YUp.object().shape({
+  name: YUp.string().required().min(3, "Minimum 3 characters."),
+  date: YUp.date()
+    .required("Date is required")
+    .min(new Date(new Date().toDateString()), "Date cannot be before today"),
+  time: YUp.string().required("Time is required"),
+  phone: YUp.string().required("Phone is required"),
+  persons: YUp.string().required("number of persons "),
+});
 export function BookingTable() {
-  const [loading, setLoading] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // "success" | "error" | null
-
-  const yup = YUp.object().shape({
-    name: YUp.string().required().min(3, "Minimum 3 characters."),
-    date: YUp.date()
-      .required("Date is required")
-      .min(new Date(new Date().toDateString()), "Date cannot be before today"),
-    time: YUp.string().required("Time is required"),
-    phone: YUp.string().required("Phone is required"),
-    persons: YUp.string().required("number of persons "),
-  });
-
   // form
   const formik = useFormik({
     initialValues: {
@@ -28,41 +26,48 @@ export function BookingTable() {
       time: "",
     },
     validationSchema: yup,
-    onSubmit: bookingTable,
+    onSubmit: handleBooking,
   });
 
   //
   function bookingTable(bookingInfo) {
     const token = localStorage.getItem("userToken");
-    setLoading(true);
-    setSubmitStatus(null);
 
-    axios
-      .post(
-        `https://restaurant-project-node-js.vercel.app/api/booking`,
-        bookingInfo,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    return axios.post(
+      `https://restaurant-project-node-js.vercel.app/api/booking`,
+      bookingInfo,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      )
-      .then((resp) => {
-        console.log(resp.data.data);
-        setSubmitStatus("success");
-        formik.resetForm();
-      })
-      .catch((error) => {
-        console.log(error.response?.data?.error ?? error.message);
-        setSubmitStatus("error");
-      })
-      .finally(() => {
-        setLoading(false);
+      },
+    );
+  }
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["BookingTable"],
+    mutationFn: bookingTable,
+    onSuccess: () => {
+      toast.success("Your table is reserved! We'll see you soon.", {
+        closeOnClick: true,
+        autoClose: 3000,
       });
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again.", {
+        closeOnClick: true,
+        autoClose: 3000,
+      });
+    },
+  });
+  function handleBooking(values) {
+    mutate(values);
   }
 
   return (
     <>
+      <Helmet>
+        <title>Booking Table</title>
+      </Helmet>
       <section id="Booktable" className="bg-[#FBF7F2]">
         {/* header */}
         <Header
@@ -77,7 +82,7 @@ export function BookingTable() {
 
         <div className="py-8 sm:py-12 px-4 sm:px-6 lg:px-10">
           <div className="max-w-4xl mx-auto relative bg-white shadow-xl shadow-black/5 rounded-3xl sm:rounded-4xl overflow-hidden">
-            <div className="h-2 bg-gradient-to-r from-main-500 to-main-600"></div>
+            <div className="h-2 bg-linear-to-r from-main-500 to-main-600"></div>
 
             <form
               className="w-full p-5 sm:p-8 lg:p-12"
@@ -247,29 +252,15 @@ export function BookingTable() {
                 </div>
               </div>
 
-              {/* submit feedback */}
-              {submitStatus === "success" && (
-                <div className="mt-5 flex items-center gap-2.5 rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 text-sm font-medium">
-                  <i className="fa-solid fa-circle-check"></i>
-                  Your table is reserved! We'll see you soon.
-                </div>
-              )}
-              {submitStatus === "error" && (
-                <div className="mt-5 flex items-center gap-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm font-medium">
-                  <i className="fa-solid fa-triangle-exclamation"></i>
-                  Something went wrong. Please try again.
-                </div>
-              )}
-
               <div className="pt-6">
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={isPending}
                   className="py-3.5 cursor-pointer px-6 w-full text-center
            bg-main-500 text-base sm:text-lg tracking-wide font-bold text-white rounded-full
            hover:bg-main-600 disabled:bg-main-300 flex items-center justify-center gap-2 transition-all duration-300"
                 >
-                  {loading ? (
+                  {isPending ? (
                     <i className="fa-solid fa-spinner fa-spin"></i>
                   ) : (
                     <>

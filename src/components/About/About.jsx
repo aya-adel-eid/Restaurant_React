@@ -1,16 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import style from "./About.module.css";
 import Header from "../Shared/header/Header";
-import { AboutUs } from "../AboutUs/AboutUs";
+
 import { Link } from "react-router-dom";
 import aboutImage from "../../assets/aboutImage.png";
+import { Helmet } from "react-helmet";
 
 export function About() {
-  const [counter, setCounter] = useState(0);
   const CORE_VALUES = [
     {
       id: 1,
-      icon: "fa-solid fa-leaf", // أقرب أيقونة للـ icon اللي في الصورة (fresh/leaf shape)
+      icon: "fa-solid fa-leaf",
       title: "Fresh Ingredients",
       description:
         "We source only the finest local and seasonal ingredients, ensuring every dish is packed with flavor and nutrition.",
@@ -73,6 +73,9 @@ export function About() {
   useEffect(() => {}, []);
   return (
     <>
+      <Helmet>
+        <title>About page</title>
+      </Helmet>
       <section>
         <Header
           hightlight={"What We Serve"}

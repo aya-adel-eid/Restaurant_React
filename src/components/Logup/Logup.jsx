@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import style from "./Logup.module.css";
 import { Alert, FloatingLabel } from "flowbite-react";
 
@@ -8,56 +8,45 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useMutation } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
+// handle error
+const yup = Yup.object().shape({
+  name: Yup.string()
+    .required("This field is required.")
+    .min(3, "Minimum 3 characters.")
+    .max(28),
+  email: Yup.string()
+    .email("invalid email")
+    .required("This field is required."),
+  password: Yup.string()
+    .required("This field is required.")
+    .matches(/^[a-zA-Z0-9_-]{8,}$/, "8+ characters, mixed case & numbers."),
+  phoneNumber: Yup.string()
+    .matches(/^01[0125][0-9]{8}$/, "Invalid Egyptian phone number")
+    .required("This field is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required("Confirm password is required"),
+});
 export function Logup() {
-  let time;
+  const timeRef = useRef(null);
   const [showpassword, setShowPassword] = useState(false);
   const [showConfirmPasssword, setConfirmPassword] = useState(false);
   const [errorMessage, setError] = useState("");
   const [successMessage, setMessage] = useState("");
-  const [loadingSpinner, setLoading] = useState(false);
+
   const navigate = useNavigate();
-  // handle error
-  const yup = Yup.object().shape({
-    name: Yup.string()
-      .required("This field is required.")
-      .min(3, "Minimum 3 characters.")
-      .max(28),
-    email: Yup.string()
-      .email("invalid email")
-      .required("This field is required."),
-    password: Yup.string()
-      .required("This field is required.")
-      .matches(/^[a-zA-Z0-9_-]{8,}$/, "8+ characters, mixed case & numbers."),
-    phoneNumber: Yup.string()
-      .matches(/^01[0125][0-9]{8}$/, "Invalid Egyptian phone number")
-      .required("This field is required"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Confirm password is required"),
-  });
+
   function registerForm(values) {
     setMessage("");
     setError("");
     const { confirmPassword, ...dataToSend } = values;
-    setLoading(true);
-    axios
-      .post(
-        `https://restaurant-project-node-js.vercel.app/api/auth/register`,
-        dataToSend,
-      )
-      .then((resp) => {
-        setLoading(false);
-        time = setTimeout(() => {
-          navigate("/signIn");
-        }, 5000);
 
-        setMessage(resp.data.message);
-      })
-      .catch((resp) => {
-        setLoading(false);
-        setError(resp.response?.data.cause);
-      });
+    return axios.post(
+      `https://restaurant-project-node-js.vercel.app/api/auth/register`,
+      dataToSend,
+    );
   }
   const formik = useFormik({
     initialValues: {
@@ -68,25 +57,43 @@ export function Logup() {
       confirmPassword: "",
     },
     validationSchema: yup,
-    onSubmit: registerForm,
+    onSubmit: handleregister,
   });
+  const { isPending, isSuccess, isError, mutate } = useMutation({
+    mutationKey: ["signUp"],
+    mutationFn: registerForm,
+    onSuccess: (resp) => {
+      timeRef.current = setTimeout(() => {
+        navigate("/signIn");
+      }, 2000);
+      setMessage(resp.data.message);
+    },
+    onError: (error) => {
+      setError(error.response?.data.cause);
+    },
+  });
+  function handleregister(values) {
+    mutate(values);
+  }
   useEffect(() => {
-    return clearTimeout(time);
+    return () => clearTimeout(timeRef.current);
   }, []);
   return (
     <>
+      <Helmet>
+        <title>Sign Up</title>
+      </Helmet>
       <div
         className="min-h-screen flex justify-center items-center py-10 px-4 sm:px-6
         bg-[#EEEEED] relative overflow-hidden"
       >
         {/* decorative background blobs */}
         <div className="absolute -top-32 -right-32 size-96 rounded-full bg-main-500/10 pointer-events-none"></div>
-        <div className="absolute -bottom-40 -left-40 size-[28rem] rounded-full bg-main-500/10 pointer-events-none"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[36rem] rounded-full border border-main-500/10 pointer-events-none"></div>
+        <div className="absolute -bottom-40 -left-40 size-112 rounded-full bg-main-500/10 pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-144 rounded-full border border-main-500/10 pointer-events-none"></div>
 
         <div className="w-full max-w-2xl relative z-10">
-          <div className="bg-white rounded-[2rem] shadow-2xl shadow-gray-300/50 overflow-hidden">
-            {/* colored header strip inside the card */}
+          <div className="bg-white rounded-4xl shadow-2xl shadow-gray-300/50 overflow-hidden">
             <div className="bg-main-500 px-8 sm:px-12 py-8 sm:py-10 text-center relative overflow-hidden">
               <div className="absolute -top-10 -right-10 size-32 rounded-full bg-white/10"></div>
               <div className="absolute -bottom-14 -left-6 size-28 rounded-full bg-white/10"></div>
@@ -257,20 +264,20 @@ export function Logup() {
                     className="disabled:bg-main-300 disabled:cursor-not-allowed bg-main-500 w-full py-3.5 px-2
                     rounded-full text-white font-semibold cursor-pointer shadow-lg shadow-main-500/30
                     hover:bg-main-600 active:scale-[0.98] transition-all duration-200"
-                    disabled={loadingSpinner}
+                    disabled={isPending}
                   >
-                    {loadingSpinner ? (
+                    {isPending ? (
                       <i className="fa-solid fa-spinner fa-spin-pulse me-2"></i>
                     ) : null}
                     Create Account
                   </button>
 
-                  {successMessage ? (
+                  {isSuccess ? (
                     <Alert color="success" className="mt-3">
                       <span className="font-medium">{successMessage}</span>
                     </Alert>
                   ) : null}
-                  {errorMessage ? (
+                  {isError ? (
                     <Alert color="failure" className="mt-3">
                       <span className="font-medium">{errorMessage}</span>
                     </Alert>

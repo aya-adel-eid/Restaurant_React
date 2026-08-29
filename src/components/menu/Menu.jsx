@@ -7,6 +7,7 @@ import { TabItem, Tabs } from "flowbite-react";
 
 import { useQuery } from "@tanstack/react-query";
 import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
+import { Helmet } from "react-helmet";
 
 export function Menu() {
   let [active, setActivatecategory] = useState("all");
@@ -21,7 +22,11 @@ export function Menu() {
     queryKey: ["AllCategories"],
     queryFn: getAllCategories,
   });
-  const { data: allMeals, isLoading } = useQuery({
+  const {
+    data: allMeals,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["getAllMeals"],
     queryFn: getAllMeals,
   });
@@ -55,9 +60,21 @@ export function Menu() {
       </>
     );
   }
+  if (isError) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <p className="text-lg font-bold text-gray-400">
+          Something went wrong while loading messages.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
+      <Helmet>
+        <title>Menu page</title>
+      </Helmet>
       <section className="min-h-screen flex flex-col">
         <div>
           <Header

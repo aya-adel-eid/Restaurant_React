@@ -5,6 +5,7 @@ import { Alert, TabItem, Tabs } from "flowbite-react";
 import axios from "axios";
 import { Circles } from "react-loader-spinner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 
 export function MyBooking() {
   const STATUS_STYLES = {
@@ -93,6 +94,9 @@ export function MyBooking() {
 
   return (
     <>
+      <Helmet>
+        <title>Bookings</title>
+      </Helmet>
       <section className="flex flex-col min-h-screen">
         {!isLoading && myBookings ? (
           <div>

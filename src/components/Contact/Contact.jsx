@@ -1,14 +1,21 @@
-import { useState } from "react";
 import style from "./Contact.module.css";
 import Header from "../Shared/header/Header";
 import { useFormik } from "formik";
 import * as YUP from "yup";
 import axios from "axios";
-
+import { Helmet } from "react-helmet";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+// validation
+const yup = YUP.object().shape({
+  name: YUP.string().required("This field is required!"),
+  email: YUP.string()
+    .required("This field is required!")
+    .email("invalid email"),
+  subject: YUP.string().required("This field is required!"),
+  message: YUP.string().required("This field is required!"),
+});
 export function Contact() {
-  const [loading, setLoading] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // "success" | "error" | null
-
   const CONTACT_INFO = [
     {
       icon: "fa-solid fa-phone",
@@ -36,16 +43,6 @@ export function Contact() {
     },
   ];
 
-  // validation
-  const yup = YUP.object().shape({
-    name: YUP.string().required("This field is required!"),
-    email: YUP.string()
-      .required("This field is required!")
-      .email("invalid email"),
-    subject: YUP.string().required("This field is required!"),
-    message: YUP.string().required("This field is required!"),
-  });
-
   // form
   const formik = useFormik({
     initialValues: {
@@ -55,31 +52,41 @@ export function Contact() {
       message: "",
     },
     validationSchema: yup,
-    onSubmit: contactUs,
+    onSubmit: handleContact,
   });
 
   // call api
   function contactUs(values) {
-    setLoading(true);
-    setSubmitStatus(null);
-    axios
-      .post(`https://restaurant-project-node-js.vercel.app/api/contact`, values)
-      .then(() => {
-        setSubmitStatus("success");
-        formik.resetForm();
-      })
-      .catch((error) => {
-        console.log(error.response?.data?.error ?? error.message);
-        setSubmitStatus("error");
-      })
-      .finally(() => {
-        setLoading(false);
+    return axios.post(
+      `https://restaurant-project-node-js.vercel.app/api/contact`,
+      values,
+    );
+  }
+  const { mutate, isPending } = useMutation({
+    mutationFn: contactUs,
+    onSuccess: () => {
+      toast.success("Message sent — we'll get back to you soon", {
+        closeOnClick: true,
+        autoClose: 3000,
       });
+    },
+    onError: () => {
+      toast.error(" Something went wrong. Please try again.", {
+        closeOnClick: true,
+        autoClose: 3000,
+      });
+    },
+  });
+  function handleContact(val) {
+    mutate(val);
   }
 
   return (
     <>
-      <section className="bg-[#FBF7F2]">
+      <Helmet>
+        <title>Contact page</title>
+      </Helmet>
+      <section className="bg-bgMain">
         <Header
           hightlight={"Get In Touch"}
           text={"Contact Us"}
@@ -106,7 +113,7 @@ export function Contact() {
 
             {/* form card, styled like a reservation ticket */}
             <div className="relative bg-white rounded-3xl shadow-xl shadow-black/5 overflow-hidden">
-              <div className="h-2 bg-gradient-to-r from-[#bb2d2d] to-[#e0674a]"></div>
+              <div className="h-2 bg-linear-to-r from-[#bb2d2d] to-[#e0674a]"></div>
 
               <form
                 className="flex flex-col gap-5 p-5 sm:p-8 lg:p-10"
@@ -226,27 +233,13 @@ export function Contact() {
                   ) : null}
                 </div>
 
-                {/* submit feedback */}
-                {submitStatus === "success" && (
-                  <div className="flex items-center gap-2.5 rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 text-sm font-medium">
-                    <i className="fa-solid fa-circle-check"></i>
-                    Message sent — we'll get back to you soon.
-                  </div>
-                )}
-                {submitStatus === "error" && (
-                  <div className="flex items-center gap-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm font-medium">
-                    <i className="fa-solid fa-triangle-exclamation"></i>
-                    Something went wrong. Please try again.
-                  </div>
-                )}
-
                 <div className="pt-1">
                   <button
                     type="submit"
                     className="disabled:bg-[#bb2d2d]/40 bg-[#bb2d2d] hover:bg-[#a12626] w-full py-3.5 rounded-full text-white cursor-pointer text-base sm:text-lg font-semibold flex items-center justify-center gap-2.5 transition-all duration-300"
-                    disabled={loading}
+                    disabled={isPending}
                   >
-                    {loading ? (
+                    {isPending ? (
                       <i className="fa-solid fa-spinner fa-spin-pulse"></i>
                     ) : (
                       <>
@@ -305,7 +298,7 @@ export function Contact() {
               <iframe
                 title="Bistro Bliss location"
                 src="https://maps.google.com/maps?q=837%20W.%20Marshall%20Lane%2C%20Los%20Angeles%2C%20CA%2090001&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                className="w-full h-48 sm:h-56 lg:h-64 border-0 grayscale-[30%]"
+                className="w-full h-48 sm:h-56 lg:h-64 border-0 grayscale-30"
                 loading="lazy"
               ></iframe>
               <div className="bg-[#2b2b2b] px-5 sm:px-6 py-4 sm:py-5 flex items-center gap-3">

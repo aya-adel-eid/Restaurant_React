@@ -5,6 +5,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import image from "../../../assets/pancake (2).png";
+import { toast } from "react-toastify";
 
 // validuation for form
 const validtion = Yup.object().shape({
@@ -51,13 +52,24 @@ export function FormAddMeal({ onClose, selectedMeal }) {
   const { isPending: addNewItemIsPending, mutate: createNewItemMuatate } =
     useMutation({
       mutationFn: addNewMeal,
-      onSuccess: () => {
-        console.log("done");
+      onSuccess: (resp) => {
+        toast.success(resp.data.message, {
+          position: "top-right",
+          autoClose: 3000,
+          closeOnClick: true,
+        });
         formMeal.resetForm();
         queryClient.invalidateQueries(["getAllMeals"]);
         onClose();
       },
-      onError: () => console.log("error"),
+      onError: (error) => {
+        console.log(error.errorMessage);
+        toast.error(error.errorMessage, {
+          closeOnClick: true,
+          autoClose: 3000,
+          position: "top-right",
+        });
+      },
     });
   function handleSubmit() {
     if (selectedMeal) {
@@ -87,13 +99,27 @@ export function FormAddMeal({ onClose, selectedMeal }) {
   const { isPending: editItemIsPending, mutate: editItemMuatate } = useMutation(
     {
       mutationFn: editMeal,
-      onSuccess: () => {
-        console.log("done");
+      onSuccess: (resp) => {
+        console.log(resp);
+
+        toast.success(resp.data.message, {
+          position: "top-right",
+          autoClose: 3000,
+          closeOnClick: true,
+        });
+
         formMeal.resetForm();
         queryClient.invalidateQueries(["getAllMeals"]);
         onClose();
       },
-      onError: () => console.log("error"),
+      onError: (error) => {
+        console.log(error.errorMessage);
+        toast.error(error.errorMessage, {
+          closeOnClick: true,
+          autoClose: 3000,
+          position: "top-right",
+        });
+      },
     },
   );
   function editMeal() {

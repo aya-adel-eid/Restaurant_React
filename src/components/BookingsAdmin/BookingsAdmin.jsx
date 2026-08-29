@@ -16,7 +16,9 @@ import axios from "axios";
 import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
 import { BookingDetailsModel } from "../BookingDetailsModel/BookingDetailsModel";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import InitialisName from "../Shared/InitialisName";
+import { formatDate, InitialisName } from "../Shared/utils/utils";
+import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 export function BookingsAdmin() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -139,15 +141,6 @@ export function BookingsAdmin() {
     setCurrentPage(page);
   }
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    return new Date(dateStr).toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
   function refreshBooking(bookingId) {
     queryClient.invalidateQueries({ queryKey: ["getAllBookings"] });
     queryClient.invalidateQueries({
@@ -198,6 +191,11 @@ export function BookingsAdmin() {
   } = useMutation({
     mutationFn: deleteBookingRequest,
     onSuccess: (_data, bookingId) => {
+      toast.success(_data.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+      });
       refreshBooking(bookingId);
 
       if (selectedBookingId === bookingId) {
@@ -205,6 +203,11 @@ export function BookingsAdmin() {
       }
     },
     onError: (error) => {
+      toast.error(error.errorMessage, {
+        closeOnClick: true,
+        autoClose: 3000,
+        position: "top-right",
+      });
       console.log(error);
     },
   });
@@ -217,10 +220,22 @@ export function BookingsAdmin() {
   } = useMutation({
     mutationFn: confirmBookingRequest,
     onSuccess: (_data, bookingId) => {
+      toast.success(_data.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+      });
       refreshBooking(bookingId);
+      closeModel();
     },
     onError: (error) => {
       console.log(error);
+
+      toast.error(error.errorMessage, {
+        closeOnClick: true,
+        autoClose: 3000,
+        position: "top-right",
+      });
     },
   });
 
@@ -232,9 +247,20 @@ export function BookingsAdmin() {
   } = useMutation({
     mutationFn: cancelBookingRequest,
     onSuccess: (_data, bookingId) => {
+      toast.success(_data.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+      });
       refreshBooking(bookingId);
+      closeModel();
     },
     onError: (error) => {
+      toast.error(error.errorMessage, {
+        closeOnClick: true,
+        autoClose: 3000,
+        position: "top-right",
+      });
       console.log(error);
     },
   });
@@ -271,7 +297,10 @@ export function BookingsAdmin() {
 
   return (
     <>
-      <section className="px-4 sm:px-8 lg:px-15 py-8 min-h-screen flex flex-col">
+      <Helmet>
+        <title>Bookings Admin</title>
+      </Helmet>
+      <section className="px-4 sm:px-8 lg:px-15 py-8 min-h-screen flex flex-col bg-bgMain ">
         <div className="flex flex-col justify-center items-between  lg:flex-row lg:justify-between lg:items-center">
           {/* headers */}
           <div className="pt-2 pb-6">
@@ -375,7 +404,7 @@ export function BookingsAdmin() {
                       {booking.phone}
                     </TableCell>
 
-                    <TableCell className="py-3 text-gray-600">
+                    <TableCell className="py-3 text-gray-600 whitespace-nowrap">
                       {formatDate(booking.date)}
                     </TableCell>
 
