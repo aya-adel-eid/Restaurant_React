@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import style from "./About.module.css";
 import Header from "../Shared/header/Header";
 
@@ -70,7 +69,6 @@ export function About() {
     },
   ];
 
-  useEffect(() => {}, []);
   return (
     <>
       <Helmet>
@@ -85,168 +83,160 @@ export function About() {
           }
           decripTwo={"behind every plate."}
         ></Header>
-        <div className="py-15 px-4 sm:px-8 lg:px-15 grid grid-cols-1 lg:grid-cols-2 gap-10 bg-[#F8F9FA]">
+
+        {/* intro */}
+        <div className="py-10 sm:py-14 lg:py-16 px-4 sm:px-8 lg:px-15 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 bg-bgMain">
           {/* left image */}
-          <div className=" relative w-full h-160 lg:px-8">
+          <div className="relative w-full h-64 sm:h-96 lg:h-160">
             <img
               src={aboutImage}
-              className="w-full h-full object-cover rounded-xl"
+              alt="Bistro Bliss interior"
+              className="w-full h-full object-cover rounded-2xl"
             />
-            <div className="bg-[#474747] rounded-xl p-6 w-fit absolute -right-8 -bottom-10">
-              <h3 className="text-lg font-bold text-white pb-2.5">
+            <div className="bg-[#2b2b2b]/95 backdrop-blur-sm rounded-2xl p-4 sm:p-6 w-[calc(100%-1.5rem)] sm:w-fit absolute left-3 right-3 bottom-3 sm:left-auto sm:right-6 sm:-bottom-8 shadow-xl">
+              <h3 className="text-base sm:text-lg font-bold text-white pb-2.5">
                 Come and visit us!
               </h3>
-              <div className="space-x-3 text-[15px] font-medium text-white tracking-widest">
-                <span>
-                  <i className="fa-solid fa-phone"></i>
-                </span>
+              <div className="flex items-center gap-3 text-sm font-medium text-white py-1">
+                <i className="fa-solid fa-phone text-main-500 w-4"></i>
                 <span>(414) 857 – 0107</span>
               </div>
-              <div className="space-x-3 text-[15px] font-medium text-white ">
-                <span>
-                  <i className="fa-solid fa-envelope"></i>
-                </span>
+              <div className="flex items-center gap-3 text-sm font-medium text-white py-1">
+                <i className="fa-solid fa-envelope text-main-500 w-4"></i>
                 <span>happytummy@restaurant.com</span>
               </div>
-              <div className="space-x-3 text-[15px] font-medium text-white tracking-widest">
-                <span>
-                  <i className="fa-solid fa-location-dot"></i>
-                </span>
+              <div className="flex items-center gap-3 text-sm font-medium text-white py-1">
+                <i className="fa-solid fa-location-dot text-main-500 w-4"></i>
                 <span>837 W. Marshall Lane, Los Angeles</span>
               </div>
             </div>
           </div>
-          {/* right */}
-          <div className="px-5 flex flex-col justify-center">
-            {/* header */}
-            <div>
-              <h5 className="text-main-500 font-semibold text-[18px] uppercase py-2.5">
-                About Us
-              </h5>
-              <h2 className="text-3xl lg:text-5xl font-bold">
-                <span className="text-[#474747]">We Provide Healthy Food</span>
 
-                <span className="text-main-500 pt-1.5">For Your Family.</span>
-              </h2>
-              <p className="text-gray-500  py-3 pt-12 text-[14px] lg:text-[18px]">
-                Our story began with a vision to create a unique dining
-                experience...
-              </p>
-              <p className="text-gray-500  py-3 text-[14px] lg:text-[18px]">
-                At our place, we believe that dining is not just about food...
-              </p>
-              <p className="text-gray-500 text-[14px] lg:text-[18px] py-4">
-                Every ingredient we use is carefully sourced from local farmers
-                and trusted suppliers. We are committed to serving food that is
-                not only delicious but also nutritious and prepared with love —
-                because your family deserves nothing less.
-              </p>
-              <div className="flex gap-2">
-                <Link
-                  to={"/menu"}
-                  className="border-2 border-main-500 px-4 py-1.5 rounded-full capitalize
+          {/* right */}
+          <div className="px-1 sm:px-5 flex flex-col justify-center pt-6 lg:pt-0">
+            <h5 className="text-main-500 font-semibold text-sm sm:text-[18px] uppercase tracking-widest py-2 sm:py-2.5">
+              About Us
+            </h5>
+            <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight">
+              <span className="text-[#474747] block sm:inline">
+                We Provide Healthy Food
+              </span>{" "}
+              <span className="text-main-500">For Your Family.</span>
+            </h2>
+            <p className="text-gray-500 py-2 pt-6 sm:pt-10 text-sm sm:text-base lg:text-lg">
+              Our story began with a vision to create a unique dining
+              experience...
+            </p>
+            <p className="text-gray-500 py-2 text-sm sm:text-base lg:text-lg">
+              At our place, we believe that dining is not just about food...
+            </p>
+            <p className="text-gray-500 py-2 text-sm sm:text-base lg:text-lg">
+              Every ingredient we use is carefully sourced from local farmers
+              and trusted suppliers. We are committed to serving food that is
+              not only delicious but also nutritious and prepared with love —
+              because your family deserves nothing less.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-4">
+              <Link
+                to={"/menu"}
+                className="border-2 border-main-500 px-5 py-2 rounded-full capitalize text-sm sm:text-base
                  text-main-500 hover:bg-main-500 hover:text-white font-medium cursor-pointer transition-all duration-500"
-                >
-                  Explore our menu
-                </Link>
-                <Link
-                  to={"/contact"}
-                  className="border-2 hover:border-main-500 px-4 py-1.5 rounded-full capitalize
-                 hover:text-main-500 hover:bg-white bg-main-500 text-white font-medium cursor-pointer transition-all duration-800"
-                >
-                  Get in touch
-                </Link>
-              </div>
+              >
+                Explore our menu
+              </Link>
+              <Link
+                to={"/contact"}
+                className="border-2 border-main-500 px-5 py-2 rounded-full capitalize text-sm sm:text-base
+                 hover:text-main-500 hover:bg-white bg-main-500 text-white font-medium cursor-pointer transition-all duration-500"
+              >
+                Get in touch
+              </Link>
             </div>
           </div>
         </div>
+
         {/* Values */}
-        <div className="py-15 px-4 sm:px-8 lg:px-15  bg-white">
-          {/* header */}
-          <div className="flex flex-col justify-center items-center py-4">
-            <h4 className="text-main-500 text-xl font-semibold tracking-wide py-2 ">
+        <div className="py-12 sm:py-16 px-4 sm:px-8 lg:px-15 bg-white">
+          <div className="flex flex-col justify-center items-center py-2 sm:py-4 text-center">
+            <h4 className="text-main-500 text-base sm:text-xl font-semibold tracking-wide py-2">
               What Drives Us
             </h4>
-            <h2 className=" space-x-1.5  text-2xl lg:text-4xl font-bold py-2">
-              <span className="text-[#474747] ">Our Core</span>
+            <h2 className="space-x-1.5 text-2xl sm:text-3xl lg:text-4xl font-bold py-2">
+              <span className="text-[#474747]">Our Core</span>
               <span className="text-main-500">Values</span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-3">
-            {CORE_VALUES.map((valu) => {
-              return (
-                <div
-                  key={valu.id}
-                  className="group text-center bg-white shadow shadow-gray-200 p-4 rounded-xl hover:-translate-y-3 transition-all duration-500"
-                >
-                  {/* icon */}
-                  <div className="flex justify-center items-center py-3">
-                    <div
-                      className="size-15 rounded-full text-[#474747] text-xl flex justify-center items-center
-   border-2 border-[#474747]  group-hover:bg-[#474747] group-hover:text-white transition-all duration-700"
-                    >
-                      <i className={valu.icon}></i>
-                    </div>
-                  </div>
-                  <div className="py-3">
-                    <h3 className="font-bold text-xs text-[18px] py-1.5">
-                      {valu.title}
-                    </h3>
-                    <p className="text-gray-400  text-[14px]">
-                      {valu.description}
-                    </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 py-3">
+            {CORE_VALUES.map((valu) => (
+              <div
+                key={valu.id}
+                className="group text-center bg-white border border-gray-100 shadow-sm p-5 sm:p-6 rounded-2xl hover:-translate-y-2 hover:shadow-md transition-all duration-500"
+              >
+                <div className="flex justify-center items-center py-2 sm:py-3">
+                  <div
+                    className="size-14 sm:size-15 rounded-full text-[#474747] text-lg sm:text-xl flex justify-center items-center
+   border-2 border-[#474747] group-hover:bg-main-500 group-hover:border-main-500 group-hover:text-white transition-all duration-500"
+                  >
+                    <i className={valu.icon}></i>
                   </div>
                 </div>
-              );
-            })}
+                <div className="py-2 sm:py-3">
+                  <h3 className="font-bold text-base sm:text-[18px] py-1.5">
+                    {valu.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm">{valu.description}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+
         {/* testimonial */}
-        <div className="py-15 px-4 sm:px-8 lg:px-15 ">
-          {/* header */}
-          <div className="flex flex-col justify-center items-center py-4">
-            <h4 className="text-main-500 text-xl font-semibold tracking-wide py-2 ">
+        <div className="py-12 sm:py-16 px-4 sm:px-8 lg:px-15 bg-bgMain">
+          <div className="flex flex-col justify-center items-center py-2 sm:py-4 text-center">
+            <h4 className="text-main-500 text-base sm:text-xl font-semibold tracking-wide py-2">
               Happy Guests
             </h4>
-            <h2 className=" space-x-1.5  text-2xl lg:text-4xl font-bold py-2">
-              <span className="text-[#474747] ">What Our </span>
+            <h2 className="space-x-1.5 text-2xl sm:text-3xl lg:text-4xl font-bold py-2">
+              <span className="text-[#474747]">What Our </span>
               <span className="text-main-500">Customers Say</span>
             </h2>
           </div>
-          <div className="py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((testimonial) => {
-              return (
-                <div className="bg-white p-6 rounded-2xl " key={testimonial.id}>
-                  {/* icons */}
-                  <div className="flex gap-1 py-1.5">
-                    {Array.from({ length: testimonial.rating }).map(
-                      (_, index) => (
-                        <i
-                          key={index}
-                          className="fa-solid fa-star text-yellow-400"
-                        ></i>
-                      ),
-                    )}
+          <div className="py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {TESTIMONIALS.map((testimonial) => (
+              <div
+                className="bg-white p-5 sm:p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
+                key={testimonial.id}
+              >
+                <div className="flex gap-1 py-1.5">
+                  {Array.from({ length: testimonial.rating }).map(
+                    (_, index) => (
+                      <i
+                        key={index}
+                        className="fa-solid fa-star text-yellow-400 text-sm"
+                      ></i>
+                    ),
+                  )}
+                </div>
+                <h2 className="text-main-500 text-base sm:text-lg font-medium py-2">
+                  {testimonial.title}
+                </h2>
+                <p className="py-1 text-gray-400 text-sm sm:text-base">
+                  {testimonial.review}
+                </p>
+                <div className="flex gap-3.5 py-4 items-center">
+                  <div className="size-10 shrink-0 rounded-full flex justify-center items-center bg-main-500 text-white font-semibold">
+                    {testimonial.avatarLetter}
                   </div>
-                  <h2 className="text-main-500 text-lg font-medium py-2">
-                    {testimonial.title}
-                  </h2>
-                  <p className="py-1 text-gray-400 ">{testimonial.review}</p>
-                  <div className="flex gap-3.5 py-4 items-center">
-                    {/* avater */}
-                    <div className="size-10 rounded-full flex justify-center items-center bg-main-500 text-white">
-                      {testimonial.avatarLetter}
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold ">{testimonial.name}</h4>
-                      <span className="text-xs text-gray-500">
-                        {testimonial.location}
-                      </span>
-                    </div>
+                  <div>
+                    <h4 className="text-sm font-bold">{testimonial.name}</h4>
+                    <span className="text-xs text-gray-500">
+                      {testimonial.location}
+                    </span>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </section>

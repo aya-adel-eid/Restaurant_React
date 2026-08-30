@@ -6,7 +6,7 @@ export function formatDate(dateStr) {
     year: "numeric",
   });
 }
-export function InitialisName(name = "") {
+export function InitialisName(name = "Geust") {
   return name
     .split(" ")
     .map((n) => n[0])

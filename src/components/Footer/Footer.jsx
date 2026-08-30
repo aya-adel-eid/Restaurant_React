@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import style from "./Footer.module.css";
 import pasta from "../../assets/pasta.png";
 import potato from "../../assets/potato.png";
@@ -6,20 +6,28 @@ import pancake from "../../assets/pancake.png";
 import ltbeta from "../../assets/5ltbeta.png";
 import LogoFooter from "../../assets/Logo-footer.png";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../assets/context/UserContext";
 
 export function Footer() {
-  const [counter, setCounter] = useState(0);
-  useEffect(() => {}, []);
+  const { role } = useContext(UserContext);
 
-  const PAGES = [
-    { label: "Home", to: "/" },
-    { label: "About", to: "/about" },
-    { label: "Menu", to: "/menu" },
-    { label: "Blog", to: "/" },
-    { label: "Contact", to: "/contact" },
-    { label: "Book a Table", to: "/bookTable" },
-    { label: "My Booking", to: "#" },
-  ];
+  const PAGES =
+    role === "admin"
+      ? [
+          { to: "/admin/DashBoard", label: "Dashboard" },
+          { to: "/admin/allMessages", label: "Messages" },
+          { to: "/admin/Bookings", label: "Bookings" },
+          { to: "/admin/MenuAdmin", label: "Menu" },
+        ]
+      : [
+          { label: "Home", to: "/" },
+          { label: "About", to: "/about" },
+          { label: "Menu", to: "/menu" },
+          { label: "Blog", to: "/" },
+          { label: "Contact", to: "/contact" },
+          { label: "Book a Table", to: "/bookTable" },
+          { label: "My Booking", to: "#" },
+        ];
 
   const CONTACT_INFO = [
     { icon: "fa-solid fa-phone", text: "(414) 857 – 0107" },

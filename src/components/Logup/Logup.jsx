@@ -69,7 +69,7 @@ export function Logup() {
       setMessage(resp.data.message);
     },
     onError: (error) => {
-      setError(error.response?.data.cause);
+      setError(error.response?.data?.cause ?? "Something went wrong.");
     },
   });
   function handleregister(values) {
@@ -83,212 +83,195 @@ export function Logup() {
       <Helmet>
         <title>Sign Up</title>
       </Helmet>
-      <div
-        className="min-h-screen flex justify-center items-center py-10 px-4 sm:px-6
-        bg-[#EEEEED] relative overflow-hidden"
-      >
-        {/* decorative background blobs */}
-        <div className="absolute -top-32 -right-32 size-96 rounded-full bg-main-500/10 pointer-events-none"></div>
-        <div className="absolute -bottom-40 -left-40 size-112 rounded-full bg-main-500/10 pointer-events-none"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-144 rounded-full border border-main-500/10 pointer-events-none"></div>
+      <div className="min-h-screen flex justify-center items-center py-10 px-4 sm:px-6 bg-[#EEEEED]">
+        <div className="w-full max-w-2xl">
+          {/* header */}
+          <div className="flex flex-col items-center mb-8">
+            <img src={logo} alt="Bistro Bliss" className="w-24 mb-4" />
+            <h3 className="font-bold text-mainText text-2xl text-center">
+              Create Account
+            </h3>
+            <span className="text-gray-500 mt-1.5 text-center text-sm">
+              Join the Bistro Bliss family today
+            </span>
+          </div>
 
-        <div className="w-full max-w-2xl relative z-10">
-          <div className="bg-white rounded-4xl shadow-2xl shadow-gray-300/50 overflow-hidden">
-            <div className="bg-main-500 px-8 sm:px-12 py-8 sm:py-10 text-center relative overflow-hidden">
-              <div className="absolute -top-10 -right-10 size-32 rounded-full bg-white/10"></div>
-              <div className="absolute -bottom-14 -left-6 size-28 rounded-full bg-white/10"></div>
-              <img
-                src={logo}
-                alt="Bistro Bliss"
-                className="mx-auto mb-3 brightness-0 invert w-24 relative z-10"
-              />
-              <h3 className="font-bold text-white text-2xl sm:text-3xl relative z-10">
-                Create Account
-              </h3>
-              <span className="text-white/85 text-sm sm:text-base relative z-10">
-                Join the Bistro Bliss family today
-              </span>
-            </div>
-
-            {/* form body */}
-            <div className="px-6 sm:px-12 py-8 sm:py-10">
-              <form className="space-y-4" onSubmit={formik.handleSubmit}>
-                {/* name + phone side by side on larger screens */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <FloatingLabel
-                      variant="outlined"
-                      label="Full Name"
-                      type="text"
-                      className="text-[15px]"
-                      name="name"
-                      value={formik.values.name}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    {(formik.touched.name || formik.values.name) &&
-                    formik.errors.name ? (
-                      <Alert color="failure" className="mt-2 py-2">
-                        <span className="font-medium text-sm space-x-1.5">
-                          <i className="fa-solid fa-circle-info"></i>
-                          <span>{formik.errors.name}</span>
-                        </span>
-                      </Alert>
-                    ) : null}
-                  </div>
-
-                  <div>
-                    <FloatingLabel
-                      variant="outlined"
-                      label="Phone"
-                      type="tel"
-                      className="text-[15px]"
-                      name="phoneNumber"
-                      value={formik.values.phoneNumber}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    {(formik.touched.phoneNumber ||
-                      formik.values.phoneNumber) &&
-                    formik.errors.phoneNumber ? (
-                      <Alert color="failure" className="mt-2 py-2">
-                        <span className="font-medium text-sm space-x-1.5">
-                          <i className="fa-solid fa-circle-info"></i>
-                          <span>{formik.errors.phoneNumber}</span>
-                        </span>
-                      </Alert>
-                    ) : null}
-                  </div>
-                </div>
-
-                {/* email full width */}
+          <div className="bg-white rounded-2xl border border-gray-100 px-6 sm:px-10 py-8 sm:py-10">
+            <form className="space-y-4" onSubmit={formik.handleSubmit}>
+              {/* name + phone side by side on larger screens */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <FloatingLabel
                     variant="outlined"
-                    label="Email Address"
-                    type="email"
+                    label="Full Name"
+                    type="text"
                     className="text-[15px]"
-                    name="email"
-                    value={formik.values.email}
+                    name="name"
+                    value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                  {(formik.touched.email || formik.values.email) &&
-                  formik.errors.email ? (
+                  {(formik.touched.name || formik.values.name) &&
+                  formik.errors.name ? (
                     <Alert color="failure" className="mt-2 py-2">
                       <span className="font-medium text-sm space-x-1.5">
                         <i className="fa-solid fa-circle-info"></i>
-                        <span>{formik.errors.email}</span>
+                        <span>{formik.errors.name}</span>
                       </span>
                     </Alert>
                   ) : null}
                 </div>
 
-                {/* password + confirm side by side on larger screens */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <div className="relative">
-                      <FloatingLabel
-                        variant="outlined"
-                        label="Password"
-                        type={showpassword ? "text" : "password"}
-                        className="text-[15px]"
-                        name="password"
-                        value={formik.values.password}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      <span
-                        className="absolute top-1/2 right-3.5 -translate-y-1/2 text-gray-400
+                <div>
+                  <FloatingLabel
+                    variant="outlined"
+                    label="Phone"
+                    type="tel"
+                    className="text-[15px]"
+                    name="phoneNumber"
+                    value={formik.values.phoneNumber}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {(formik.touched.phoneNumber || formik.values.phoneNumber) &&
+                  formik.errors.phoneNumber ? (
+                    <Alert color="failure" className="mt-2 py-2">
+                      <span className="font-medium text-sm space-x-1.5">
+                        <i className="fa-solid fa-circle-info"></i>
+                        <span>{formik.errors.phoneNumber}</span>
+                      </span>
+                    </Alert>
+                  ) : null}
+                </div>
+              </div>
+
+              {/* email full width */}
+              <div>
+                <FloatingLabel
+                  variant="outlined"
+                  label="Email Address"
+                  type="email"
+                  className="text-[15px]"
+                  name="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                {(formik.touched.email || formik.values.email) &&
+                formik.errors.email ? (
+                  <Alert color="failure" className="mt-2 py-2">
+                    <span className="font-medium text-sm space-x-1.5">
+                      <i className="fa-solid fa-circle-info"></i>
+                      <span>{formik.errors.email}</span>
+                    </span>
+                  </Alert>
+                ) : null}
+              </div>
+
+              {/* password + confirm side by side on larger screens */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <div className="relative">
+                    <FloatingLabel
+                      variant="outlined"
+                      label="Password"
+                      type={showpassword ? "text" : "password"}
+                      className="text-[15px]"
+                      name="password"
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    <span
+                      className="absolute top-1/2 right-3.5 -translate-y-1/2 text-gray-400
                         hover:text-main-500 cursor-pointer transition-colors duration-200"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                      >
-                        {showpassword ? (
-                          <i className="fa-solid fa-eye"></i>
-                        ) : (
-                          <i className="fa-solid fa-eye-slash"></i>
-                        )}
-                      </span>
-                    </div>
-                    {(formik.touched.password || formik.values.password) &&
-                    formik.errors.password ? (
-                      <Alert color="failure" className="mt-2 py-2">
-                        <span className="font-medium text-sm space-x-1.5">
-                          <i className="fa-solid fa-circle-info"></i>
-                          <span>{formik.errors.password}</span>
-                        </span>
-                      </Alert>
-                    ) : null}
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showpassword ? (
+                        <i className="fa-solid fa-eye"></i>
+                      ) : (
+                        <i className="fa-solid fa-eye-slash"></i>
+                      )}
+                    </span>
                   </div>
+                  {(formik.touched.password || formik.values.password) &&
+                  formik.errors.password ? (
+                    <Alert color="failure" className="mt-2 py-2">
+                      <span className="font-medium text-sm space-x-1.5">
+                        <i className="fa-solid fa-circle-info"></i>
+                        <span>{formik.errors.password}</span>
+                      </span>
+                    </Alert>
+                  ) : null}
+                </div>
 
-                  <div>
-                    <div className="relative">
-                      <FloatingLabel
-                        variant="outlined"
-                        label="Confirm Password"
-                        type={showConfirmPasssword ? "text" : "password"}
-                        className="text-[15px]"
-                        name="confirmPassword"
-                        value={formik.values.confirmPassword}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      <span
-                        className="absolute top-1/2 right-3.5 -translate-y-1/2 text-gray-400
+                <div>
+                  <div className="relative">
+                    <FloatingLabel
+                      variant="outlined"
+                      label="Confirm Password"
+                      type={showConfirmPasssword ? "text" : "password"}
+                      className="text-[15px]"
+                      name="confirmPassword"
+                      value={formik.values.confirmPassword}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    <span
+                      className="absolute top-1/2 right-3.5 -translate-y-1/2 text-gray-400
                         hover:text-main-500 cursor-pointer transition-colors duration-200"
-                        onClick={() => setConfirmPassword((prev) => !prev)}
-                      >
-                        {showConfirmPasssword ? (
-                          <i className="fa-solid fa-eye"></i>
-                        ) : (
-                          <i className="fa-solid fa-eye-slash"></i>
-                        )}
-                      </span>
-                    </div>
-                    {(formik.touched.confirmPassword ||
-                      formik.values.confirmPassword) &&
-                    formik.errors.confirmPassword ? (
-                      <Alert color="failure" className="mt-2 py-2">
-                        <span className="font-medium text-sm space-x-1.5">
-                          <i className="fa-solid fa-circle-info"></i>
-                          <span>{formik.errors.confirmPassword}</span>
-                        </span>
-                      </Alert>
-                    ) : null}
+                      onClick={() => setConfirmPassword((prev) => !prev)}
+                    >
+                      {showConfirmPasssword ? (
+                        <i className="fa-solid fa-eye"></i>
+                      ) : (
+                        <i className="fa-solid fa-eye-slash"></i>
+                      )}
+                    </span>
                   </div>
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="disabled:bg-main-300 disabled:cursor-not-allowed bg-main-500 w-full py-3.5 px-2
-                    rounded-full text-white font-semibold cursor-pointer shadow-lg shadow-main-500/30
-                    hover:bg-main-600 active:scale-[0.98] transition-all duration-200"
-                    disabled={isPending}
-                  >
-                    {isPending ? (
-                      <i className="fa-solid fa-spinner fa-spin-pulse me-2"></i>
-                    ) : null}
-                    Create Account
-                  </button>
-
-                  {isSuccess ? (
-                    <Alert color="success" className="mt-3">
-                      <span className="font-medium">{successMessage}</span>
-                    </Alert>
-                  ) : null}
-                  {isError ? (
-                    <Alert color="failure" className="mt-3">
-                      <span className="font-medium">{errorMessage}</span>
+                  {(formik.touched.confirmPassword ||
+                    formik.values.confirmPassword) &&
+                  formik.errors.confirmPassword ? (
+                    <Alert color="failure" className="mt-2 py-2">
+                      <span className="font-medium text-sm space-x-1.5">
+                        <i className="fa-solid fa-circle-info"></i>
+                        <span>{formik.errors.confirmPassword}</span>
+                      </span>
                     </Alert>
                   ) : null}
                 </div>
-              </form>
-            </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="disabled:bg-main-300 disabled:cursor-not-allowed bg-main-500 w-full py-3 px-2
+                    rounded-full text-white font-semibold cursor-pointer
+                    hover:bg-main-600 transition-colors duration-200"
+                  disabled={isPending}
+                >
+                  {isPending ? (
+                    <i className="fa-solid fa-spinner fa-spin-pulse me-2"></i>
+                  ) : null}
+                  Create Account
+                </button>
+
+                {isSuccess ? (
+                  <Alert color="success" className="mt-3">
+                    <span className="font-medium">{successMessage}</span>
+                  </Alert>
+                ) : null}
+                {isError ? (
+                  <Alert color="failure" className="mt-3">
+                    <span className="font-medium">{errorMessage}</span>
+                  </Alert>
+                ) : null}
+              </div>
+            </form>
           </div>
 
           <div className="text-center mt-6">
-            <p className="font-medium text-gray-600">
+            <p className="font-medium text-gray-600 text-sm">
               Already have an account?{" "}
               <Link
                 to={"/signIn"}

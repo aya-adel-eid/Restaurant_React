@@ -135,6 +135,7 @@ function App() {
   ]);
   // Create a client
   const queryClient = new QueryClient();
+
   return (
     <>
       <QueryClientProvider client={queryClient}>

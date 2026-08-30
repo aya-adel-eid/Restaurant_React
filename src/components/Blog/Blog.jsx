@@ -78,8 +78,6 @@ export function Blog() {
   const [blogCategoryDisplay, setBlogCategoryDisplay] = useState(BLOG_ARTICLES);
 
   function getBlogByCategory(category) {
-    console.log(category);
-
     const allBlogCatgory = structuredClone(BLOG_ARTICLES);
     if (category === "All") {
       setBlogCategoryDisplay(allBlogCatgory);
@@ -105,38 +103,40 @@ export function Blog() {
           }
           decripTwo={"stay ahead in the culinary world."}
         ></Header>
-        <div className="py-15 px-4 sm:px-8 lg:px-15 bg-white">
-          {/* header */}
+
+        {/* Featured article */}
+        <div className="py-10 sm:py-14 lg:py-16 px-4 sm:px-8 lg:px-15 bg-white">
           <div className="pb-6">
-            <h5 className="font-bold text-sm text-main-500">Featured</h5>
-            <h3 className="font-bold text-xl py-1.5 leading-6 tracking-wide  ">
+            <h5 className="font-bold text-sm text-main-500 tracking-widest uppercase">
+              Featured
+            </h5>
+            <h3 className="font-bold text-xl sm:text-2xl py-1.5 leading-tight tracking-wide">
               Editor's Pick
             </h3>
           </div>
-          {/*  */}
-          <div className="p-8 border rounded-2xl border-gray-200 shadow-2xs shadow-gray-200 grid gap-3 grid-cols-1 lg:grid-cols-2">
+
+          <div className="p-4 sm:p-8 border rounded-2xl border-gray-100 shadow-sm grid gap-3 grid-cols-1 lg:grid-cols-2">
             {/* left */}
-            <div className="flex justify-center items-center py-5">
+            <div className="flex justify-center items-center py-3 sm:py-5">
               <img
                 src={pasta}
                 alt="pasta"
-                className="w-full lg:max-w-120 h-60 sm:h-72 lg:h-80 object-cover px-4"
+                className="w-full lg:max-w-120 h-52 sm:h-72 lg:h-80 object-cover rounded-xl lg:rounded-none lg:px-4"
               />
             </div>
             {/* right */}
-            <div>
-              <h3 className="text-[15px] lg:text-lg font-bold text-main-500">
+            <div className="px-1 sm:px-2 lg:px-0">
+              <h3 className="text-sm sm:text-[15px] lg:text-lg font-bold text-main-500">
                 Cooking Tips
               </h3>
-              <h2 className="text-[18px] py-1.5 lg:text-2xl font-bold">
-                The Art of French Cuisine: A Deep Dive Into <br />
-                Classic Techniques
+              <h2 className="text-lg sm:text-xl py-1.5 lg:text-2xl font-bold leading-snug">
+                The Art of French Cuisine: A Deep Dive Into Classic Techniques
               </h2>
-              <span className="space-x-2 text-gray-400 text-xs font-medium block py-2">
+              <span className="flex items-center gap-2 text-gray-400 text-xs font-medium py-2">
                 <i className="fa-regular fa-calendar"></i>
                 <span>February 10, 2024</span>
               </span>
-              <p className="py-4 text-gray-400 text-lg">
+              <p className="py-3 sm:py-4 text-gray-500 text-sm sm:text-base lg:text-lg">
                 French cuisine has long been considered the gold standard of
                 fine dining. From mastering the perfect béchamel to crafting an
                 elegant soufflé, we explore the foundational techniques every
@@ -144,27 +144,26 @@ export function Blog() {
                 through the essentials that transform a good cook into a great
                 one.
               </p>
-              <button className="text-lg font-semibold border text-main-500 py-2 px-4 rounded-3xl border-main-500 hover:bg-main-500 hover:text-white">
+              <button className="text-sm sm:text-base font-semibold border text-main-500 py-2 px-4 rounded-3xl border-main-500 hover:bg-main-500 hover:text-white transition-colors duration-300">
                 Read Article{" "}
-                <span>
-                  <i className="fa-solid fa-arrow-right-long px-1"></i>
-                </span>
+                <i className="fa-solid fa-arrow-right-long px-1"></i>
               </button>
             </div>
           </div>
         </div>
-        <div className="py-15 px-4 sm:px-8 lg:px-15">
-          {/* header */}
+
+        {/* All articles */}
+        <div className="py-10 sm:py-14 lg:py-16 px-4 sm:px-8 lg:px-15 bg-bgMain">
           <div className="text-center">
-            <h4 className="text-main-500 font-bold text-[18px] leading-5">
+            <h4 className="text-main-500 font-bold text-sm sm:text-[18px] leading-5">
               All Articles
             </h4>
-            <h2 className="font-bold text-2xl lg:text-3xl leanding-9">
+            <h2 className="font-bold text-2xl lg:text-3xl leading-9">
               Fresh From The Kitchen
             </h2>
           </div>
-          {/* blog */}
-          <div className="py-3 ">
+
+          <div className="py-3">
             <div className="flex justify-center py-3 overflow-x-auto">
               <Tabs
                 aria-label="Pills"
@@ -181,7 +180,7 @@ export function Blog() {
                         pills: {
                           active: {
                             on: "bg-main-500 text-white px-4 sm:px-8 py-2 rounded-full whitespace-nowrap",
-                            off: "bg-gray-100/50  rounded-full  px-4 sm:px-8 py-2  border border-gray-200 text-black whitespace-nowrap",
+                            off: "bg-white rounded-full px-4 sm:px-8 py-2 border border-gray-200 text-black whitespace-nowrap",
                           },
                         },
                       },
@@ -199,35 +198,39 @@ export function Blog() {
               </Tabs>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 py-8 sm:py-10">
               {blogCategoryDisplay?.map((article) => (
                 <div
                   key={article.id}
-                  className="bg-white  rounded-2xl group
-                   hover:shadow-xl hover:shadow-gray-300 overflow-hidden transition-all duration-500"
+                  className="bg-white border border-gray-100 rounded-2xl group
+                   shadow-sm hover:shadow-xl hover:-translate-y-1 overflow-hidden transition-all duration-500"
                 >
-                  <div className="relative ">
+                  <div className="relative">
                     <img
                       src={article.image}
-                      className="w-full h-60 object-cover rounded-t-2xl group-hover:scale-105 transition-all duration-500"
+                      alt={article.title}
+                      className="w-full h-52 sm:h-60 object-cover rounded-t-2xl group-hover:scale-105 transition-all duration-500"
                     />
-                    <span className="absolute top-3 left-3 bg-black text-white text-xs px-2 py-1 rounded">
+                    <span className="absolute top-3 left-3 bg-main-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
                       {article.category}
                     </span>
                   </div>
-                  <div className="p-5">
-                    <p className="text-xs text-gray-400">
-                      <i className="fa-regular fa-calendar"></i> {article.date}
+                  <div className="p-4 sm:p-5">
+                    <p className="flex items-center gap-1.5 text-xs text-gray-400">
+                      <i className="fa-regular fa-calendar"></i>
+                      {article.date}
                     </p>
-                    <h3 className="font-bold text-lg py-2">{article.title}</h3>
+                    <h3 className="font-bold text-base sm:text-lg py-2 leading-snug">
+                      {article.title}
+                    </h3>
                     <p className="text-sm text-gray-500">
                       {article.description}
                     </p>
                     <a
                       href="#"
-                      className="text-main-500 font-semibold text-sm py-3 inline-block"
+                      className="text-main-500 font-semibold text-sm py-3 inline-flex items-center gap-1 hover:gap-2 transition-all duration-300"
                     >
-                      Read More →
+                      Read More <span aria-hidden="true">→</span>
                     </a>
                   </div>
                 </div>
