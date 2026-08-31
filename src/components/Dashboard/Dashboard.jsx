@@ -18,14 +18,11 @@ export function Dashboard() {
   });
 
   function getDashboardData() {
-    return axios.get(
-      `https://restaurant-project-node-js.vercel.app/api/dashboard`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    return axios.get(`${import.meta.env.VITE_API_URL}/dashboard`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
   }
 
   const stats = dashboardResp?.data.data;

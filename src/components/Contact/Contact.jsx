@@ -57,10 +57,7 @@ export function Contact() {
 
   // call api
   function contactUs(values) {
-    return axios.post(
-      `https://restaurant-project-node-js.vercel.app/api/contact`,
-      values,
-    );
+    return axios.post(`${import.meta.env.VITE_API_URL}/contact`, values);
   }
   const { mutate, isPending } = useMutation({
     mutationFn: contactUs,

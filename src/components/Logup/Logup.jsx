@@ -44,7 +44,7 @@ export function Logup() {
     const { confirmPassword, ...dataToSend } = values;
 
     return axios.post(
-      `https://restaurant-project-node-js.vercel.app/api/auth/register`,
+      `${import.meta.env.VITE_API_URL}/auth/register`,
       dataToSend,
     );
   }

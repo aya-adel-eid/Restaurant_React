@@ -1,109 +1,21 @@
 import { useState } from "react";
-import axios from "axios";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import { useCategoriesAdmin } from "./Hook/useCategoriesAdmin";
 
 export function ManageCategories({ activeCategory, onActiveChange }) {
-  const token = localStorage.getItem("userToken");
-  const queryClient = useQueryClient();
-
   const [editingId, setEditingId] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [newValue, setNewValue] = useState("");
 
-  const { data: categoriesResp } = useQuery({
-    queryKey: ["AllCategories"],
-    queryFn: () =>
-      axios.get(`https://restaurant-project-node-js.vercel.app/api/category`),
-  });
-
-  const categories = categoriesResp?.data.data ?? [];
-
-  function invalidate() {
-    queryClient.invalidateQueries({ queryKey: ["AllCategories"] });
-  }
-
-  const { mutate: createCategory, isPending: isCreating } = useMutation({
-    mutationFn: (value) =>
-      axios.post(
-        `https://restaurant-project-node-js.vercel.app/api/category`,
-        { name: value, displayName: value },
-        { headers: { Authorization: `Bearer ${token}` } },
-      ),
-    onSuccess: () => {
-      toast.success("Category created", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-      });
-      setNewValue("");
-      invalidate();
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.message ?? "Something went wrong.", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-      });
-    },
-  });
-
-  const { mutate: updateCategory, isPending: isUpdating } = useMutation({
-    mutationFn: ({ id, value }) =>
-      axios.put(
-        `https://restaurant-project-node-js.vercel.app/api/category/${id}`,
-        { name: value, displayName: value },
-        { headers: { Authorization: `Bearer ${token}` } },
-      ),
-    onSuccess: () => {
-      toast.success("Category updated", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-      });
-      setEditingId(null);
-      invalidate();
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.message ?? "Something went wrong.", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-      });
-    },
-  });
-
   const {
-    mutate: deleteCategory,
-    isPending: isDeleting,
-    variables: deletingId,
-  } = useMutation({
-    mutationFn: (id) =>
-      axios.delete(
-        `https://restaurant-project-node-js.vercel.app/api/category/${id}`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      ),
-    onSuccess: (_resp, id) => {
-      toast.success("Category deleted", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-      });
-
-      const deleted = categories.find((c) => c._id === id);
-      if (deleted && activeCategory === deleted.name) {
-        onActiveChange("all");
-      }
-      invalidate();
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.message ?? "Something went wrong.", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-      });
-    },
-  });
+    categories,
+    createCategory,
+    isCreating,
+    updateCategory,
+    isUpdating,
+    deleteCategory,
+    isDeleting,
+    deletingId,
+  } = useCategoriesAdmin();
 
   function startEdit(category) {
     setEditingId(category._id);
@@ -117,23 +29,31 @@ export function ManageCategories({ activeCategory, onActiveChange }) {
 
   function confirmEdit() {
     if (!editValue.trim()) return;
-    updateCategory({ id: editingId, value: editValue.trim() });
+    updateCategory(
+      { id: editingId, value: editValue.trim() },
+      { onSuccess: () => setEditingId(null) },
+    );
   }
 
   function confirmCreate() {
     if (!newValue.trim()) return;
-    createCategory(newValue.trim());
+    createCategory(newValue.trim(), {
+      onSuccess: () => setNewValue(""),
+    });
   }
 
   function handleDelete(category) {
-    if (window.confirm(`Delete "${category.displayName}"?`)) {
-      deleteCategory(category._id);
-    }
+    deleteCategory(category._id, {
+      onSuccess: () => {
+        if (activeCategory === category.name) {
+          onActiveChange("all");
+        }
+      },
+    });
   }
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      {/* All pill — filter only, not editable/deletable */}
       <button
         onClick={() => onActiveChange("all")}
         className={`px-5 py-2.5 rounded-full text-sm font-semibold border transition-colors duration-200 ${

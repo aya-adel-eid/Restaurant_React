@@ -26,10 +26,7 @@ export function Login() {
   const [errorMessage, setErrorMessage] = useState();
 
   function Login(userData) {
-    return axios.post(
-      `https://restaurant-project-node-js.vercel.app/api/auth/login`,
-      userData,
-    );
+    return axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, userData);
   }
   const { mutate, isPending, isSuccess, isError } = useMutation({
     mutationFn: Login,

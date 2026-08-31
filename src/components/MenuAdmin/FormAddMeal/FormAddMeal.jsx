@@ -1,32 +1,29 @@
-import { useEffect, useRef, useState } from "react";
-import style from "./FormAddMeal.module.css";
+import { useRef, useState } from "react";
 import * as Yup from "yup";
-import axios from "axios";
 import { useFormik } from "formik";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import image from "../../../assets/pancake (2).png";
-import { toast } from "react-toastify";
 
-// validuation for form
+import { useCategories } from "../../Shared/Hooks/useCategories";
+import { useMenuAdmin } from "../Hook/useMenuAdmin";
+
 const validtion = Yup.object().shape({
   productName: Yup.string().required("this filed is required "),
-
   productPrice: Yup.number().required("this filed is required "),
   productCategory: Yup.string().required("this filed is required "),
   productDescription: Yup.string().required("this filed is required "),
   image: Yup.string().required("this filed is required "),
 });
+
 export function FormAddMeal({ onClose, selectedMeal }) {
   const [isUploaded, setIsUpladed] = useState(selectedMeal?.imageUrl || null);
   const imageValue = useRef(null);
   const textInput = useRef(null);
-  const token = localStorage.getItem("userToken");
 
-  const formData = new FormData();
-  // form
+  const { categories } = useCategories();
+  const { addMealMutate, isAddPending, editMealMutate, isEditPending } =
+    useMenuAdmin();
+
   const formMeal = useFormik({
     enableReinitialize: true,
-
     initialValues: {
       productName: selectedMeal?.productName || "",
       productPrice: selectedMeal?.productPrice || "",
@@ -34,121 +31,59 @@ export function FormAddMeal({ onClose, selectedMeal }) {
       productDescription: selectedMeal?.productDescription || "",
       image: selectedMeal?.imageUrl || "",
     },
-
     validationSchema: validtion,
-
     onSubmit: handleCreateNewMeal,
   });
+
   function handelImagePreview(e) {
     const path = URL.createObjectURL(e.target.files[0]);
     setIsUpladed(path);
   }
+
   function handleRemoveImage() {
     setIsUpladed(null);
-    // imageValue.current.value = "";
     formMeal.setFieldValue("image", "");
   }
-  const queryClient = useQueryClient();
-  const { isPending: addNewItemIsPending, mutate: createNewItemMuatate } =
-    useMutation({
-      mutationFn: addNewMeal,
-      onSuccess: (resp) => {
-        toast.success(resp.data.message, {
-          position: "top-right",
-          autoClose: 3000,
-          closeOnClick: true,
-        });
-        formMeal.resetForm();
-        queryClient.invalidateQueries(["getAllMeals"]);
-        onClose();
-      },
-      onError: (error) => {
-        console.log(error.errorMessage);
-        toast.error(error.errorMessage, {
-          closeOnClick: true,
-          autoClose: 3000,
-          position: "top-right",
-        });
-      },
-    });
-  function handleSubmit() {
-    if (selectedMeal) {
-      editItemMuatate();
-    } else createNewItemMuatate();
-  }
 
-  function handleCreateNewMeal(values) {
+  function buildFormData(values) {
+    const formData = new FormData();
     formData.append("productName", values.productName);
     formData.append("productPrice", values.productPrice);
     formData.append("productCategory", values.productCategory);
     formData.append("productDescription", values.productDescription);
     formData.append("image", values.image);
-    handleSubmit();
+    return formData;
   }
-  function addNewMeal() {
-    return axios.post(
-      `https://restaurant-project-node-js.vercel.app/api/menu`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+
+  function handleCreateNewMeal(values) {
+    const formData = buildFormData(values);
+
+    if (selectedMeal) {
+      editMealMutate(
+        { id: selectedMeal._id, formData },
+        {
+          onSuccess: () => {
+            formMeal.resetForm();
+            onClose();
+          },
         },
-      },
-    );
-  }
-  const { isPending: editItemIsPending, mutate: editItemMuatate } = useMutation(
-    {
-      mutationFn: editMeal,
-      onSuccess: (resp) => {
-        console.log(resp);
-
-        toast.success(resp.data.message, {
-          position: "top-right",
-          autoClose: 3000,
-          closeOnClick: true,
-        });
-
-        formMeal.resetForm();
-        queryClient.invalidateQueries(["getAllMeals"]);
-        onClose();
-      },
-      onError: (error) => {
-        console.log(error.errorMessage);
-        toast.error(error.errorMessage, {
-          closeOnClick: true,
-          autoClose: 3000,
-          position: "top-right",
-        });
-      },
-    },
-  );
-  function editMeal() {
-    return axios.put(
-      `https://restaurant-project-node-js.vercel.app/api/menu/${selectedMeal._id}`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      );
+    } else {
+      addMealMutate(formData, {
+        onSuccess: () => {
+          formMeal.resetForm();
+          onClose();
         },
-      },
-    );
-  }
-  const { data: allCategories } = useQuery({
-    queryKey: ["AllCategories"],
-    queryFn: getAllCategories,
-  });
-  function getAllCategories() {
-    return axios.get(
-      `https://restaurant-project-node-js.vercel.app/api/category`,
-    );
+      });
+    }
   }
 
-  useEffect(() => {}, []);
+  const isPending = isAddPending || isEditPending;
+
   return (
     <>
       <div className="w-full px-2 bg-black/50 flex justify-center items-center fixed inset-0 z-50">
-        <div className="bg-white p-8 rounded-2xl  lg:w-2/4 w-full max-h-[90vh] overflow-y-auto">
-          {/* header */}
+        <div className="bg-white p-8 rounded-2xl lg:w-2/4 w-full max-h-[90vh] overflow-y-auto">
           <div className="px-4 flex justify-between items-center">
             <h2 className="text-main-500 text-center text-2xl font-semibold">
               Create Menu Item
@@ -157,10 +92,9 @@ export function FormAddMeal({ onClose, selectedMeal }) {
               <i className="fa-solid fa-xmark text-xl text-gray-500"></i>
             </button>
           </div>
-          {/* Form */}
+
           <div className="py-6">
             <form
-              action=""
               className="flex flex-col gap-4"
               onSubmit={formMeal.handleSubmit}
             >
@@ -194,7 +128,7 @@ export function FormAddMeal({ onClose, selectedMeal }) {
                   </p>
                 )}
                 {isUploaded && (
-                  <div className="flex justify-center ">
+                  <div className="flex justify-center">
                     <div className="relative">
                       <img
                         src={isUploaded}
@@ -213,7 +147,7 @@ export function FormAddMeal({ onClose, selectedMeal }) {
                   </div>
                 )}
               </div>
-              {/* product Name */}
+
               <div>
                 <label
                   htmlFor="productName"
@@ -241,7 +175,7 @@ export function FormAddMeal({ onClose, selectedMeal }) {
                     </p>
                   )}
               </div>
-              {/* Price */}
+
               <div>
                 <label
                   htmlFor="price"
@@ -269,7 +203,7 @@ export function FormAddMeal({ onClose, selectedMeal }) {
                     </p>
                   )}
               </div>
-              {/* category */}
+
               <div>
                 <label
                   htmlFor="category"
@@ -289,7 +223,7 @@ export function FormAddMeal({ onClose, selectedMeal }) {
                   className="w-full border py-2 px-4 rounded-2xl border-gray-400 focus:border-main-600 outline-none"
                 >
                   <option value="">select Category...</option>
-                  {allCategories?.data.data.map((category) => (
+                  {categories.map((category) => (
                     <option value={category._id} key={category._id}>
                       {category.displayName}
                     </option>
@@ -302,7 +236,7 @@ export function FormAddMeal({ onClose, selectedMeal }) {
                     </p>
                   )}
               </div>
-              {/* description */}
+
               <div>
                 <label
                   htmlFor="description"
@@ -330,19 +264,19 @@ export function FormAddMeal({ onClose, selectedMeal }) {
                     </p>
                   )}
               </div>
-              {/* actions  */}
+
               <div className="pb-3">
                 <button
-                  disabled={addNewItemIsPending || editItemIsPending}
+                  disabled={isPending}
                   type="submit"
-                  className=" px-5 py-2 bg-main-600 text-white rounded-2xl disabled:bg-gray-400 font-semibold w-full  cursor-pointer"
+                  className="px-5 py-2 bg-main-600 text-white rounded-2xl disabled:bg-gray-400 font-semibold w-full cursor-pointer"
                 >
-                  {addNewItemIsPending || editItemIsPending ? (
+                  {isPending ? (
                     <i className="fa-solid fa-spinner animate-spin"></i>
                   ) : selectedMeal ? (
                     "Save Item"
                   ) : (
-                    " Create Item"
+                    "Create Item"
                   )}
                 </button>
               </div>

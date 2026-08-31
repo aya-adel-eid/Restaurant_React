@@ -33,15 +33,11 @@ export function BookingTable() {
   function bookingTable(bookingInfo) {
     const token = localStorage.getItem("userToken");
 
-    return axios.post(
-      `https://restaurant-project-node-js.vercel.app/api/booking`,
-      bookingInfo,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    return axios.post(`${import.meta.env.VITE_API_URL}/booking`, bookingInfo, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
   }
   const { mutate, isPending } = useMutation({
     mutationKey: ["BookingTable"],

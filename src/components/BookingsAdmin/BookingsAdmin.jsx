@@ -12,13 +12,11 @@ import {
   Pagination,
 } from "flowbite-react";
 import { Dropdown, DropdownItem } from "flowbite-react";
-import axios from "axios";
 import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
 import { BookingDetailsModel } from "../BookingDetailsModel/BookingDetailsModel";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDate, InitialisName } from "../Shared/utils/utils";
-import { toast } from "react-toastify";
 import { Helmet } from "react-helmet";
+import { useBookingsAdmin } from "./Hook/useBookingsAdmin";
 
 export function BookingsAdmin() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,7 +24,7 @@ export function BookingsAdmin() {
   const [searchInput, setSearchInput] = useState("");
   const [flag, setFlag] = useState(false);
   const [activeStatus, setActiveStatus] = useState("All");
-  // selectedBookingId drives which booking's details are fetched
+
   const [selectedBookingId, setSelectedBookingId] = useState(null);
 
   const colArr = [
@@ -40,7 +38,6 @@ export function BookingsAdmin() {
     "actions",
   ];
   const statusArr = ["All", "pending", "confirmed", "cancelled"];
-  const token = localStorage.getItem("userToken");
   const STATUS_STYLES = {
     PENDING: "bg-amber-100 text-amber-700",
     CONFIRMED: "bg-green-100 text-green-700",
@@ -55,49 +52,22 @@ export function BookingsAdmin() {
     setSelectedBookingId(null);
   }
 
-  const queryClient = useQueryClient();
-
   const {
-    data: allBookingsResp,
+    allBookings,
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ["getAllBookings"],
-    queryFn: getAllBookings,
-  });
-
-  const allBookings = allBookingsResp?.data.data ?? [];
-
-  function getAllBookings() {
-    return axios.get(
-      `https://restaurant-project-node-js.vercel.app/api/booking`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  }
-
-  const { data: bookingDetailsResp, isLoading: isBookingDetailsLoading } =
-    useQuery({
-      queryKey: ["getBookingDetails", selectedBookingId],
-      queryFn: () => getBookingDetails(selectedBookingId),
-      enabled: !!selectedBookingId,
-    });
-
-  const bookingDetails = bookingDetailsResp?.data.data;
-
-  function getBookingDetails(bookingId) {
-    return axios.get(
-      `https://restaurant-project-node-js.vercel.app/api/booking/${bookingId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  }
+    bookingDetails,
+    isBookingDetailsLoading,
+    deleteBooking,
+    isDeletePending,
+    deletingBookingId,
+    bookingConfirm,
+    isConfirmPending,
+    confirmingBookingId,
+    bookingCancel,
+    isCancelPending,
+    cancellingBookingId,
+  } = useBookingsAdmin(selectedBookingId);
 
   function handleViewBooking(bookingId) {
     setSelectedBookingId(bookingId);
@@ -109,7 +79,6 @@ export function BookingsAdmin() {
     setActiveStatus(statu);
   }
 
-  //  bookings filtered by the active status tab
   const bookingsByStatus =
     activeStatus === "All"
       ? allBookings
@@ -141,140 +110,26 @@ export function BookingsAdmin() {
     setCurrentPage(page);
   }
 
-  function refreshBooking(bookingId) {
-    queryClient.invalidateQueries({ queryKey: ["getAllBookings"] });
-    queryClient.invalidateQueries({
-      queryKey: ["getBookingDetails", bookingId],
+  function handleDeleteBooking(bookingId) {
+    deleteBooking(bookingId, {
+      onSuccess: () => {
+        if (selectedBookingId === bookingId) {
+          closeModel();
+        }
+      },
     });
   }
 
-  function deleteBookingRequest(bookingId) {
-    return axios.delete(
-      `https://restaurant-project-node-js.vercel.app/api/booking/${bookingId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  }
-
-  function confirmBookingRequest(bookingId) {
-    return axios.patch(
-      `https://restaurant-project-node-js.vercel.app/api/booking/${bookingId}/confirm`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  }
-
-  function cancelBookingRequest(bookingId) {
-    return axios.patch(
-      `https://restaurant-project-node-js.vercel.app/api/booking/${bookingId}/cancel/admin`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  }
-
-  // Delete
-  const {
-    mutate: deleteBooking,
-    isPending: isDeletePending,
-    variables: deletingBookingId,
-  } = useMutation({
-    mutationFn: deleteBookingRequest,
-    onSuccess: (_data, bookingId) => {
-      toast.success(_data.data.message, {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-      });
-      refreshBooking(bookingId);
-
-      if (selectedBookingId === bookingId) {
-        closeModel();
-      }
-    },
-    onError: (error) => {
-      toast.error(error.errorMessage, {
-        closeOnClick: true,
-        autoClose: 3000,
-        position: "top-right",
-      });
-      console.log(error);
-    },
-  });
-
-  // Confirm
-  const {
-    mutate: bookingConfirm,
-    isPending: isConfirmPending,
-    variables: confirmingBookingId,
-  } = useMutation({
-    mutationFn: confirmBookingRequest,
-    onSuccess: (_data, bookingId) => {
-      toast.success(_data.data.message, {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-      });
-      refreshBooking(bookingId);
-      closeModel();
-    },
-    onError: (error) => {
-      console.log(error);
-
-      toast.error(error.errorMessage, {
-        closeOnClick: true,
-        autoClose: 3000,
-        position: "top-right",
-      });
-    },
-  });
-
-  // Cancel
-  const {
-    mutate: bookingCancel,
-    isPending: isCancelPending,
-    variables: cancellingBookingId,
-  } = useMutation({
-    mutationFn: cancelBookingRequest,
-    onSuccess: (_data, bookingId) => {
-      toast.success(_data.data.message, {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-      });
-      refreshBooking(bookingId);
-      closeModel();
-    },
-    onError: (error) => {
-      toast.error(error.errorMessage, {
-        closeOnClick: true,
-        autoClose: 3000,
-        position: "top-right",
-      });
-      console.log(error);
-    },
-  });
-
-  function handleDeleteBooking(bookingId) {
-    deleteBooking(bookingId);
-  }
-
   function handleConfirmBooking(bookingId) {
-    bookingConfirm(bookingId);
+    bookingConfirm(bookingId, {
+      onSuccess: () => closeModel(),
+    });
   }
 
   function handleCancelBooking(bookingId) {
-    bookingCancel(bookingId);
+    bookingCancel(bookingId, {
+      onSuccess: () => closeModel(),
+    });
   }
 
   if (isLoading) {

@@ -1,6 +1,5 @@
-import { useState } from "react";
 import style from "./Messages.module.css";
-import axios from "axios";
+
 import {
   Accordion,
   AccordionContent,
@@ -10,56 +9,24 @@ import {
 } from "flowbite-react";
 
 import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
-import { useQuery } from "@tanstack/react-query";
+
 import { formatDate, InitialisName } from "../Shared/utils/utils";
 import { Helmet } from "react-helmet";
+import { useMessage } from "./Hook/useMessage";
 
 export function Messages() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchInput, setSearchInput] = useState("");
-  const messagesPerPage = 4;
-  function getAllMessages() {
-    const userToken = localStorage.getItem("userToken");
-    return axios.get(
-      `https://restaurant-project-node-js.vercel.app/api/contact`,
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      },
-    );
-  }
   const {
-    data: allMessages,
-    isLoading,
+    onPageChange,
+    handleSearchChange,
+    currentMessages,
+    totalPages,
     isError,
-  } = useQuery({
-    queryFn: getAllMessages,
-    queryKey: ["getAllMessages"],
-  });
-
-  const messagesList = allMessages?.data.data ?? [];
-
-  // search & pagination
-  const filteredMessages = messagesList.filter((msg) => {
-    const term = searchInput.toLowerCase();
-    return (
-      msg.name?.toLowerCase().includes(term) ||
-      msg.email?.toLowerCase().includes(term)
-    );
-  });
-  const totalPages = Math.ceil(filteredMessages.length / messagesPerPage);
-  const startIndex = (currentPage - 1) * messagesPerPage;
-  const currentMessages = filteredMessages.slice(
-    startIndex,
-    startIndex + messagesPerPage,
-  );
-  function handleSearchChange(e) {
-    setSearchInput(e.target.value);
-    setCurrentPage(1);
-  }
-
-  const onPageChange = (page) => setCurrentPage(page);
+    isLoading,
+    filteredMessages,
+    messagesList,
+    searchInput,
+    currentPage,
+  } = useMessage();
 
   if (isLoading) {
     return (

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import style from "./MenuAdmin.module.css";
 import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
 import {
   Table,
@@ -9,82 +8,27 @@ import {
   TableHeadCell,
   TableRow,
 } from "flowbite-react";
-
-import axios from "axios";
 import { FormAddMeal } from "./FormAddMeal/FormAddMeal";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { Helmet } from "react-helmet";
 import { formatDate } from "../Shared/utils/utils";
-
 import { ManageCategories } from "../MangeCategories/ManageCategories";
+import { useMenuAdmin } from "./Hook/useMenuAdmin";
+import { useMenu } from "../Shared/Hooks/useMenu";
+
+const colArr = ["#", "Image", "Title", "date", "Price", "Category", "actions"];
 export function MenuAdmin() {
-  const token = localStorage.getItem("userToken");
   const [selectedItem, setSelectedItem] = useState(null);
   const [flag, setFlag] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
 
-  const colArr = [
-    "#",
-    "Image",
-    "Title",
-    "date",
-    "Price",
-    "Category",
-    "actions",
-  ];
-  const { data: allMeals, isLoading } = useQuery({
-    queryKey: ["getAllMeals"],
-    queryFn: getAllMeals,
-  });
-  function getAllMeals() {
-    return axios.get(`https://restaurant-project-node-js.vercel.app/api/menu`);
-  }
+  const { deleteMealMutate, isDeletePending, deletingId } = useMenuAdmin();
+  const { meals, isLoading } = useMenu();
 
   const displayMeals =
     activeCategory === "all"
-      ? (allMeals?.data.data ?? [])
-      : (allMeals?.data.data ?? []).filter(
-          (meal) => meal.productCategory?.name === activeCategory,
-        );
+      ? meals
+      : meals.filter((meal) => meal.productCategory?.name === activeCategory);
 
-  const query = useQueryClient();
-  const {
-    isPending: isDeletePending,
-    variables: deletingId,
-    mutate: deleteMealMutate,
-  } = useMutation({
-    mutationFn: deleteMeal,
-
-    onSuccess: (resp) => {
-      toast.success(resp.data.message, {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-      });
-      query.invalidateQueries({ queryKey: ["getAllMeals"] });
-    },
-    onError: (error) => {
-      const message = error.response?.data?.message ?? "Something went wrong.";
-      console.log(message);
-      toast.error(message, {
-        closeOnClick: true,
-        autoClose: 3000,
-        position: "top-right",
-      });
-    },
-  });
-
-  function deleteMeal(id) {
-    return axios.delete(
-      `https://restaurant-project-node-js.vercel.app/api/menu/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  }
   function editItem(item) {
     setSelectedItem(item);
     open();
@@ -99,11 +43,9 @@ export function MenuAdmin() {
 
   if (isLoading) {
     return (
-      <>
-        <div className="min-h-screen flex justify-center items-center ">
-          <LoaderSpinner></LoaderSpinner>
-        </div>
-      </>
+      <div className="min-h-screen flex justify-center items-center">
+        <LoaderSpinner />
+      </div>
     );
   }
 
@@ -113,8 +55,7 @@ export function MenuAdmin() {
         <title>Menu Admin</title>
       </Helmet>
       <section className="px-4 sm:px-8 lg:px-15 py-8 min-h-screen flex flex-col bg-[#FBF7F2]">
-        <div className="flex flex-col justify-center items-between  lg:flex-row lg:justify-between lg:items-center">
-          {/* headers */}
+        <div className="flex flex-col justify-center items-between lg:flex-row lg:justify-between lg:items-center">
           <div className="pt-2 pb-6 flex justify-between items-center w-full">
             <h2 className="font-bold text-2xl text-main-500">Menu</h2>
             <div>
@@ -138,8 +79,6 @@ export function MenuAdmin() {
           />
         </div>
 
-        {/* table card — keeps the table visually grounded against the
-            page's warm background instead of floating directly on it */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="overflow-x-auto overflow-y-visible">
             <Table striped className="text-sm">
@@ -240,7 +179,7 @@ export function MenuAdmin() {
           openFun={open}
           onClose={close}
           selectedMeal={selectedItem}
-        ></FormAddMeal>
+        />
       )}
     </>
   );

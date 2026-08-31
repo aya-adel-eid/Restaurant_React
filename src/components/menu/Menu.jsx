@@ -1,39 +1,19 @@
 import style from "./Menu.module.css";
 import Header from "../Shared/header/Header";
 import { useState } from "react";
-import axios from "axios";
 import MealCard from "../meal/MealCard";
 import { TabItem, Tabs } from "flowbite-react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMenu } from "../Shared/hooks/useMenu";
+import { useCategories } from "../Shared/hooks/useCategories";
 import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
 import { Helmet } from "react-helmet";
 
 export function Menu() {
   let [active, setActivatecategory] = useState("all");
-  console.log(active);
 
-  function getAllCategories() {
-    return axios.get(
-      `https://restaurant-project-node-js.vercel.app/api/category`,
-    );
-  }
-  const { data: allCategories } = useQuery({
-    queryKey: ["AllCategories"],
-    queryFn: getAllCategories,
-  });
-  const {
-    data: allMeals,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["getAllMeals"],
-    queryFn: getAllMeals,
-  });
-
-  function getAllMeals() {
-    return axios.get(`https://restaurant-project-node-js.vercel.app/api/menu`);
-  }
+  const { categories } = useCategories();
+  const { meals: allMeals, isLoading, isError } = useMenu();
 
   function getMealByCategory(category) {
     setActivatecategory(category);
@@ -41,15 +21,13 @@ export function Menu() {
 
   const tabsList = [
     { _id: "all", name: "all", displayName: "All" },
-    ...(allCategories?.data.data || []),
+    ...(categories || []),
   ];
 
   const displayMeals =
     active === "all"
-      ? (allMeals?.data.data ?? [])
-      : (allMeals?.data.data ?? []).filter(
-          (meal) => meal.productCategory.name === active,
-        );
+      ? (allMeals ?? [])
+      : (allMeals ?? []).filter((meal) => meal.productCategory.name === active);
 
   if (isLoading) {
     return (
