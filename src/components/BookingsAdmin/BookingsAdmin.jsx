@@ -281,30 +281,19 @@ export function BookingsAdmin() {
                       </span>
                     </TableCell>
                     <TableCell className="py-3 ">
-                      <Dropdown
-                        label=""
-                        dismissOnClick={true}
-                        renderTrigger={() => (
-                          <button
-                            aria-label="Actions"
-                            className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500"
-                          >
-                            <i className="fa-solid fa-ellipsis-vertical"></i>
-                          </button>
-                        )}
-                      >
-                        <DropdownItem
+                      <div className="flex gap-2">
+                        <button
                           onClick={() => handleViewBooking(booking._id)}
+                          className="cursor-pointer"
                         >
                           <i className="fa-regular fa-eye mr-2"></i>
-                          View
-                        </DropdownItem>
-                        <DropdownItem
+                        </button>
+                        <button
                           onClick={() => handleDeleteBooking(booking._id)}
                           disabled={
                             isDeletePending && deletingBookingId === booking._id
                           }
-                          className="text-red-600"
+                          className="text-red-600 cursor-pointer"
                         >
                           {isDeletePending &&
                           deletingBookingId === booking._id ? (
@@ -312,9 +301,8 @@ export function BookingsAdmin() {
                           ) : (
                             <i className="fa-regular fa-trash-can mr-2"></i>
                           )}
-                          Delete
-                        </DropdownItem>
-                      </Dropdown>
+                        </button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
