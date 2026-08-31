@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useCategories } from "../../Shared/hooks/useCategories";
+import { useCategories } from "../../Shared/Hooks/useCategories";
 
 export function useCategoriesAdmin() {
   const token = localStorage.getItem("userToken");

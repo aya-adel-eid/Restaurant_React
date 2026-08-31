@@ -4,8 +4,8 @@ import { useState } from "react";
 import MealCard from "../meal/MealCard";
 import { TabItem, Tabs } from "flowbite-react";
 
-import { useMenu } from "../Shared/hooks/useMenu";
-import { useCategories } from "../Shared/hooks/useCategories";
+import { useMenu } from "../Shared/Hooks/useMenu";
+import { useCategories } from "../Shared/Hooks/useCategories";
 import { LoaderSpinner } from "../Shared/LoaderSpinner/LoaderSpinner";
 import { Helmet } from "react-helmet";
 
