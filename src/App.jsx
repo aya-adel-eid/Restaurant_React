@@ -1,6 +1,6 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Layout } from "./components/Layout/Layout";
+
 import Home from "./components/Home/Home";
 import { About } from "./components/About/About";
 import { Blog } from "./components/Blog/Blog";
@@ -19,7 +19,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { MyBooking } from "./components/MyBooking/MyBooking";
 import { AdminProtectRoute } from "./components/AdminProtectRoute/AdminProtectRoute";
 import { Dashboard } from "./components/Dashboard/Dashboard";
-import { LayoutAdmin } from "./components/LayoutAdmin/LayoutAdmin";
 
 import { ProtectRouteFromAdmin } from "./components/ProtectRouteFromAdmin/ProtectRouteFromAdmin";
 import { Messages } from "./components/Messages/Messages";
@@ -27,6 +26,7 @@ import { BookingsAdmin } from "./components/BookingsAdmin/BookingsAdmin";
 import { MenuAdmin } from "./components/MenuAdmin/MenuAdmin";
 import { ScrollToTop } from "./components/Scrolltotop/Scrolltotop";
 import { Bounce, ToastContainer } from "react-toastify";
+import { Layout } from "./layouts/Layout/Layout";
 
 function App() {
   const routes = createBrowserRouter([
@@ -106,7 +106,7 @@ function App() {
       path: "admin",
       element: (
         <AdminProtectRoute>
-          <LayoutAdmin />
+          <Layout />
         </AdminProtectRoute>
       ),
       children: [

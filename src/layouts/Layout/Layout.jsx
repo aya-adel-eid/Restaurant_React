@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
 import style from "./Layout.module.css";
-import { NavBar } from "../NavBar/NavBar";
+import { NavBar } from "../../components/NavBar/NavBar";
 import { Outlet } from "react-router-dom";
-import { Footer } from "../Footer/Footer";
+import { Footer } from "../../components/Footer/Footer";
 export function Layout() {
-  useEffect(() => {}, []);
   return (
     <>
       <div className="flex flex-col justify-between min-h-screen">
