@@ -15,12 +15,12 @@ import {
 import { BookingDetailsModel } from "../BookingDetailsModel/BookingDetailsModel";
 
 import { Helmet } from "react-helmet";
-import { useBookingsAdmin } from "./Hook/useBookingsAdmin";
 import { LoaderSpinner } from "../../../components/Shared/LoaderSpinner/LoaderSpinner";
 import {
   formatDate,
   InitialisName,
 } from "../../../components/Shared/utils/utils";
+import { useBookingsAdmin } from "./Hook/useBookingsAdmin";
 
 export function BookingsAdmin() {
   const [currentPage, setCurrentPage] = useState(1);

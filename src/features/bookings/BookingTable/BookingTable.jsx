@@ -2,10 +2,10 @@ import style from "./BookingTable.module.css";
 import Header from "../../../components/Shared/header/Header";
 import { useFormik } from "formik";
 import * as YUp from "yup";
-import axios from "axios";
+
 import { Helmet } from "react-helmet";
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { useMyBookings } from "../Hook/useMyBookings";
 const yup = YUp.object().shape({
   name: YUp.string().required().min(3, "Minimum 3 characters."),
   date: YUp.date()
@@ -16,6 +16,7 @@ const yup = YUp.object().shape({
   persons: YUp.string().required("number of persons "),
 });
 export function BookingTable() {
+  const { bookingTable, isBookingPending } = useMyBookings();
   // form
   const formik = useFormik({
     initialValues: {
@@ -30,33 +31,23 @@ export function BookingTable() {
   });
 
   //
-  function bookingTable(bookingInfo) {
-    const token = localStorage.getItem("userToken");
 
-    return axios.post(`${import.meta.env.VITE_API_URL}/booking`, bookingInfo, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+  function handleBooking(values) {
+    bookingTable(values, {
+      onSuccess: () => {
+        toast.success("Your table is reserved! We'll see you soon.", {
+          closeOnClick: true,
+          autoClose: 3000,
+        });
+        formik.resetForm();
+      },
+      onError: () => {
+        toast.error("Something went wrong. Please try again.", {
+          closeOnClick: true,
+          autoClose: 3000,
+        });
       },
     });
-  }
-  const { mutate, isPending } = useMutation({
-    mutationKey: ["BookingTable"],
-    mutationFn: bookingTable,
-    onSuccess: () => {
-      toast.success("Your table is reserved! We'll see you soon.", {
-        closeOnClick: true,
-        autoClose: 3000,
-      });
-    },
-    onError: () => {
-      toast.error("Something went wrong. Please try again.", {
-        closeOnClick: true,
-        autoClose: 3000,
-      });
-    },
-  });
-  function handleBooking(values) {
-    mutate(values);
   }
 
   return (
@@ -251,12 +242,12 @@ export function BookingTable() {
               <div className="pt-6">
                 <button
                   type="submit"
-                  disabled={isPending}
+                  disabled={isBookingPending}
                   className="py-3.5 cursor-pointer px-6 w-full text-center
            bg-main-500 text-base sm:text-lg tracking-wide font-bold text-white rounded-full
            hover:bg-main-600 disabled:bg-main-300 flex items-center justify-center gap-2 transition-all duration-300"
                 >
-                  {isPending ? (
+                  {isBookingPending ? (
                     <i className="fa-solid fa-spinner fa-spin"></i>
                   ) : (
                     <>

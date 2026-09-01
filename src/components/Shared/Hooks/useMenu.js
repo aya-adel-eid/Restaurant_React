@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { getAllMeals } from "../../../features/meals/services/menuServices";
 
 export function useMenu() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["menu"],
-    queryFn: () => axios.get(`${import.meta.env.VITE_API_URL}/menu`),
+    queryFn: () => getAllMeals(),
   });
 
   return {

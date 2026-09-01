@@ -4,10 +4,10 @@ import { useState } from "react";
 import MealCard from "../meal/MealCard";
 import { TabItem, Tabs } from "flowbite-react";
 
-import { useMenu } from "../../../../components/Shared/Hooks/useMenu";
-import { useCategories } from "../../../../components/Shared/Hooks/useCategories";
 import { LoaderSpinner } from "../../../../components/Shared/LoaderSpinner/LoaderSpinner";
 import { Helmet } from "react-helmet";
+import { useMenu } from "../../../../components/Shared/Hooks/useMenu";
+import { useCategories } from "../../../../components/Shared/Hooks/useCategories";
 
 export function Menu() {
   let [active, setActivatecategory] = useState("all");

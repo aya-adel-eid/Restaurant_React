@@ -1,9 +1,15 @@
-import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import {
+  cancelBookingRequest,
+  confirmBookingRequest,
+  deleteBookingRequest,
+  getAllBookings,
+  getAllBookingsAdmin,
+  getBookingDetails,
+} from "../../services/bookingsServices";
 
 export function useBookingsAdmin(selectedBookingId) {
-  const token = localStorage.getItem("userToken");
   const queryClient = useQueryClient();
 
   const {
@@ -12,18 +18,10 @@ export function useBookingsAdmin(selectedBookingId) {
     isError,
   } = useQuery({
     queryKey: ["getAllBookings"],
-    queryFn: getAllBookings,
+    queryFn: getAllBookingsAdmin,
   });
 
   const allBookings = allBookingsResp?.data.data ?? [];
-
-  function getAllBookings() {
-    return axios.get(`${import.meta.env.VITE_API_URL}/booking`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
 
   const { data: bookingDetailsResp, isLoading: isBookingDetailsLoading } =
     useQuery({
@@ -34,54 +32,11 @@ export function useBookingsAdmin(selectedBookingId) {
 
   const bookingDetails = bookingDetailsResp?.data.data;
 
-  function getBookingDetails(bookingId) {
-    return axios.get(`${import.meta.env.VITE_API_URL}/booking/${bookingId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
-
   function refreshBooking(bookingId) {
     queryClient.invalidateQueries({ queryKey: ["getAllBookings"] });
     queryClient.invalidateQueries({
       queryKey: ["getBookingDetails", bookingId],
     });
-  }
-
-  function deleteBookingRequest(bookingId) {
-    return axios.delete(
-      `${import.meta.env.VITE_API_URL}/booking/${bookingId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  }
-
-  function confirmBookingRequest(bookingId) {
-    return axios.patch(
-      `${import.meta.env.VITE_API_URL}/booking/${bookingId}/confirm`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  }
-
-  function cancelBookingRequest(bookingId) {
-    return axios.patch(
-      `${import.meta.env.VITE_API_URL}/booking/${bookingId}/cancel/admin`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
   }
 
   // Delete

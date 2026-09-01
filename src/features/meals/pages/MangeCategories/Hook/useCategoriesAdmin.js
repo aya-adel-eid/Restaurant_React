@@ -1,10 +1,13 @@
-import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useCategories } from "../../../../../components/Shared/Hooks/useCategories";
+import {
+  addCategory,
+  deleteCategoryReq,
+  editCategory,
+} from "../../../services/menuServices";
 
 export function useCategoriesAdmin() {
-  const token = localStorage.getItem("userToken");
   const queryClient = useQueryClient();
 
   const { categories } = useCategories();
@@ -14,12 +17,7 @@ export function useCategoriesAdmin() {
   }
 
   const { mutate: createCategory, isPending: isCreating } = useMutation({
-    mutationFn: (value) =>
-      axios.post(
-        `${import.meta.env.VITE_API_URL}/category`,
-        { name: value, displayName: value },
-        { headers: { Authorization: `Bearer ${token}` } },
-      ),
+    mutationFn: (value) => addCategory(value),
     onSuccess: () => {
       toast.success("Category created", {
         position: "top-right",
@@ -41,12 +39,7 @@ export function useCategoriesAdmin() {
   });
 
   const { mutate: updateCategory, isPending: isUpdating } = useMutation({
-    mutationFn: ({ id, value }) =>
-      axios.put(
-        `${import.meta.env.VITE_API_URL}/category/${id}`,
-        { name: value, displayName: value },
-        { headers: { Authorization: `Bearer ${token}` } },
-      ),
+    mutationFn: ({ id, value }) => editCategory(id, value),
     onSuccess: () => {
       toast.success("Category updated", {
         position: "top-right",
@@ -72,10 +65,7 @@ export function useCategoriesAdmin() {
     isPending: isDeleting,
     variables: deletingId,
   } = useMutation({
-    mutationFn: (id) =>
-      axios.delete(`${import.meta.env.VITE_API_URL}/category/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      }),
+    mutationFn: (id) => deleteCategoryReq(id),
     onSuccess: () => {
       toast.success("Category deleted", {
         position: "top-right",

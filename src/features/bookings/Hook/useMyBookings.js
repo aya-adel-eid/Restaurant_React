@@ -1,13 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+
 import { useState } from "react";
+import {
+  bookingsTable,
+  cancelBookingTable,
+  getAllBookings,
+} from "../services/bookingsServices";
+import { toast } from "react-toastify";
 
 export function useMyBookings() {
   const Status = ["All", "pending", "confirmed", "cancelled"];
-  const token = localStorage.getItem("userToken");
+
   const [currentStatus, setCurrentStatus] = useState("All");
   const queryClient = useQueryClient();
-
+  // all Bookings
   const {
     data: myBookings,
     isLoading,
@@ -17,42 +23,35 @@ export function useMyBookings() {
     queryFn: getAllBookings,
   });
 
-  function getAllBookings() {
-    return axios.get(`${import.meta.env.VITE_API_URL}/booking/my`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
-
   const displayMyBookings =
     currentStatus === "All"
       ? (myBookings?.data.data ?? [])
       : (myBookings?.data.data ?? []).filter(
           (booking) => booking.status === currentStatus,
         );
-
+  // cancel Bookings
   const {
     mutate: cancelBooking,
     isPending: isCancelPending,
     variables: cancellingId,
   } = useMutation({
-    mutationFn: (id) =>
-      axios.patch(
-        `${import.meta.env.VITE_API_URL}/booking/${id}/cancel`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      ),
-    onSuccess: () => {
+    mutationFn: (id) => cancelBookingTable(id),
+    onSuccess: (resp) => {
+      console.log(resp.data.data.message);
+
+      toast.success(resp.data.message, {
+        closeOnClick: true,
+        autoClose: 3000,
+      });
       queryClient.invalidateQueries({ queryKey: ["getAllBookingsUser"] });
     },
     onError: (error) => {
-      console.log(error);
+      toast.error(error.response.data.errorMessage);
     },
+  });
+  const { mutate: bookingTable, isPending: isBookingPending } = useMutation({
+    mutationKey: ["BookingTable"],
+    mutationFn: bookingsTable,
   });
 
   function handleCancelBooking(id) {
@@ -84,5 +83,7 @@ export function useMyBookings() {
     handleCancelBooking,
     getMyBookingByStatu,
     canCancel,
+    bookingTable,
+    isBookingPending,
   };
 }

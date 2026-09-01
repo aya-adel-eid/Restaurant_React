@@ -5,7 +5,7 @@ import { Alert, TabItem, Tabs } from "flowbite-react";
 import { Helmet } from "react-helmet";
 import { formatDate } from "../../../components/Shared/utils/utils";
 import { LoaderSpinner } from "../../../components/Shared/LoaderSpinner/LoaderSpinner";
-import { useMyBookings } from "./Hook/useMyBookings";
+import { useMyBookings } from "../Hook/useMyBookings";
 const STATUS_STYLES = {
   PENDING: "bg-amber-100 text-amber-700",
   CONFIRMED: "bg-green-100 text-green-700",
@@ -183,7 +183,7 @@ export function MyBooking() {
                         disabled={
                           isCancelPending && cancellingId === booking._id
                         }
-                        className="w-full border border-red-400 text-red-500 font-semibold py-2.5 rounded-lg
+                        className="w-full border border-red-400 text-red-500 font-semibold py-2.5 rounded-lg cursor-pointer
     flex items-center justify-center gap-2 hover:bg-red-50 transition-all duration-300 disabled:opacity-50"
                       >
                         {isCancelPending && cancellingId === booking._id ? (
