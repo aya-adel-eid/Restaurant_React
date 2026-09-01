@@ -2,7 +2,7 @@ import style from "./About.module.css";
 import Header from "../Shared/header/Header";
 
 import { Link } from "react-router-dom";
-import aboutImage from "../../assets/aboutImage.png";
+import aboutImage from "../../assets/images/aboutImage.png";
 import { Helmet } from "react-helmet";
 
 export function About() {

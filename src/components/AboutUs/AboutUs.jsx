@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import style from "./AboutUs.module.css";
 import { Link } from "react-router-dom";
-import aboutImage from "../../assets/aboutImage.png";
+import aboutImage from "../../assets/images/aboutImage.png";
 
 export function AboutUs() {
   useEffect(() => {}, []);

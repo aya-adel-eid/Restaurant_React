@@ -4,25 +4,25 @@ import { Link } from "react-router-dom";
 import { AboutUs } from "../AboutUs/AboutUs";
 
 // Services images
-import kebabSetTable from "../../assets/kebab-set-table 1.png";
-import birthdayImg from "../../assets/charming-female-blowing-candles-birthday-.png";
-import weddingImg from "../../assets/happy-man-wife-sunny-day 1.png";
-import eventsImg from "../../assets/group.png";
+import kebabSetTable from "../../assets/images/kebab-set-table 1.png";
+import birthdayImg from "../../assets/images/charming-female-blowing-candles-birthday-.png";
+import weddingImg from "../../assets/images/happy-man-wife-sunny-day 1.png";
+import eventsImg from "../../assets/images/group.png";
 
 // Delivery section images
-import chefImg from "../../assets/chef.png";
-import hotPotImg from "../../assets/hot-pot-thai-food 1.png";
+import chefImg from "../../assets/images/chef.png";
+import hotPotImg from "../../assets/images/hot-pot-thai-food 1.png";
 
 // Delivery apps logos
-import uberEatsLogo from "../../assets/Group1.png";
-import grubhubLogo from "../../assets/grubhub.png";
-import postmatesLogo from "../../assets/postmates.png";
-import doordashLogo from "../../assets/doordash.png";
-import foodpandaLogo from "../../assets/foodpanda.png";
-import deliverooLogo from "../../assets/deliveroo.png";
-import instacartLogo from "../../assets/instacar.png";
-import justeatLogo from "../../assets/justeat.png";
-import didifoodLogo from "../../assets/didifood.png";
+import uberEatsLogo from "../../assets/images/Group1.png";
+import grubhubLogo from "../../assets/images/grubhub.png";
+import postmatesLogo from "../../assets/images/postmates.png";
+import doordashLogo from "../../assets/images/doordash.png";
+import foodpandaLogo from "../../assets/images/foodpanda.png";
+import deliverooLogo from "../../assets/images/deliveroo.png";
+import instacartLogo from "../../assets/images/instacar.png";
+import justeatLogo from "../../assets/images/justeat.png";
+import didifoodLogo from "../../assets/images/didifood.png";
 import { Helmet } from "react-helmet";
 
 export default function Home() {

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import style from "./Blog.module.css";
 import Header from "../Shared/header/Header";
-import pasta from "../../assets/pasta2.png";
-import past1 from "../../assets/pasta (1).png";
-import pancake from "../../assets/pancake (1).png";
-import ltbeta from "../../assets/5ltbeta (1).png";
-import potato from "../../assets/potato (1).png";
+import pasta from "../../assets/images/pasta2.png";
+import past1 from "../../assets/images/pasta (1).png";
+import pancake from "../../assets/images/pancake (1).png";
+import ltbeta from "../../assets/images/5ltbeta (1).png";
+import potato from "../../assets/images/potato (1).png";
 import { TabItem, Tabs } from "flowbite-react";
 import { Helmet } from "react-helmet";
 

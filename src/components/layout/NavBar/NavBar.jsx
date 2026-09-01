@@ -9,9 +9,9 @@ import {
   ThemeProvider,
 } from "flowbite-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from "../../assets/Logo2.png";
-import { UserContext } from "../../assets/context/UserContext";
-import { InitialisName } from "../Shared/utils/utils";
+import logo from "../../../assets/images/Logo2.png";
+import { UserContext } from "../../../assets/context/UserContext";
+import { InitialisName } from "../../Shared/utils/utils";
 
 export function NavBar() {
   const navigate = useNavigate();

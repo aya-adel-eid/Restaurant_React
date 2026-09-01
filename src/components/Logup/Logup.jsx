@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import style from "./Logup.module.css";
 import { Alert, FloatingLabel } from "flowbite-react";
 
-import logo from "../../assets/Logo2.png";
+import logo from "../../assets/images/Logo2.png";
 import { useFormik } from "formik";
 
 import * as Yup from "yup";

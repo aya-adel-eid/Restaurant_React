@@ -1,7 +1,7 @@
 import { useState } from "react";
 import style from "./Login.module.css";
 import { useFormik } from "formik";
-import logo from "../../assets/Logo2.png";
+import logo from "../../assets/images/Logo2.png";
 import * as YUp from "yup";
 import { Alert, FloatingLabel } from "flowbite-react";
 import axios from "axios";

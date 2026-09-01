@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import style from "./Footer.module.css";
-import pasta from "../../assets/pasta.png";
-import potato from "../../assets/potato.png";
-import pancake from "../../assets/pancake.png";
-import ltbeta from "../../assets/5ltbeta.png";
-import LogoFooter from "../../assets/Logo-footer.png";
+import pasta from "../../../assets/images/pasta.png";
+import potato from "../../../assets/images/potato.png";
+import pancake from "../../../assets/images/pancake.png";
+import ltbeta from "../../../assets/images/5ltbeta.png";
+import LogoFooter from "../../../assets/images/Logo-footer.png";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../assets/context/UserContext";
+import { UserContext } from "../../../assets/context/UserContext";
 
 export function Footer() {
   const { role } = useContext(UserContext);
