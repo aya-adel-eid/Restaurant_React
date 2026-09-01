@@ -1,8 +1,0 @@
-.image {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-    url("/src/assets/HomePage.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
