@@ -1,7 +1,14 @@
 import style from "./Home.module.css";
-
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { AboutUs } from "../about/components/AboutUs/AboutUs";
+import {
+  scaleIn,
+  fadeDown,
+  rotateIn,
+  stagger,
+  viewportSettings,
+} from "../../lib/motionVariants";
 
 // Services images
 import kebabSetTable from "../../assets/images/kebab-set-table 1.png";
@@ -27,21 +34,9 @@ import { Helmet } from "react-helmet";
 
 export default function Home() {
   const DELIVERY_FEATURES = [
-    {
-      id: 1,
-      icon: "fa-regular fa-clock",
-      title: "Delivery within 30 minutes",
-    },
-    {
-      id: 2,
-      icon: "fa-solid fa-tag",
-      title: "Best Offer & Prices",
-    },
-    {
-      id: 3,
-      icon: "fa-solid fa-headset",
-      title: "Online Services Available",
-    },
+    { id: 1, icon: "fa-regular fa-clock", title: "Delivery within 30 minutes" },
+    { id: 2, icon: "fa-solid fa-tag", title: "Best Offer & Prices" },
+    { id: 3, icon: "fa-solid fa-headset", title: "Online Services Available" },
   ];
   const SERVICES = [
     {
@@ -125,25 +120,42 @@ export default function Home() {
         <title>Home page</title>
       </Helmet>
       <section className="overflow-x-hidden">
-        {/* hero */}
+        {/* hero: العنوان بيبان من ضبابي لواضح (fadeDown) */}
         <div
           className={`${style.image} min-h-screen flex justify-center items-center px-4`}
         >
-          <div className="text-center">
-            <h4 className="text-main-600 text-sm sm:text-lg lg:text-xl font-semibold tracking-wide sm:tracking-widest leading-3.5 py-4">
+          <motion.div
+            className="text-center"
+            initial="hidden"
+            animate="visible"
+            variants={stagger(0.15, 0.1)}
+          >
+            <motion.h4
+              variants={fadeDown}
+              className="text-main-600 text-sm sm:text-lg lg:text-xl font-semibold tracking-wide sm:tracking-widest leading-3.5 py-4"
+            >
               It's Not Fast Food, It's
-            </h4>
-            <h2 className="text-[#474747] text-3xl sm:text-5xl lg:text-7xl font-bold tracking-wide">
+            </motion.h4>
+            <motion.h2
+              variants={fadeDown}
+              className="text-[#474747] text-3xl sm:text-5xl lg:text-7xl font-bold tracking-wide"
+            >
               <span>Best Food</span>
               <br />
               <span>For Your Taste</span>
-            </h2>
-            <p className="py-4 text-sm sm:text-lg lg:text-xl">
+            </motion.h2>
+            <motion.p
+              variants={fadeDown}
+              className="py-4 text-sm sm:text-lg lg:text-xl"
+            >
               <span>Discover delectable cuisine and unforgettable moments</span>
               <br />
               <span>in our welcoming, culinary haven.</span>
-            </p>
-            <div className="py-5 flex flex-col sm:flex-row justify-center gap-4 sm:gap-5">
+            </motion.p>
+            <motion.div
+              variants={scaleIn}
+              className="py-5 flex flex-col sm:flex-row justify-center gap-4 sm:gap-5"
+            >
               <Link
                 to={"/bookTable"}
                 className="bg-main-500 text-white py-3 px-5 text-sm sm:py-3.5 sm:px-6 sm:text-base lg:py-4 lg:px-6 lg:text-lg rounded-full border-2 border-main-500
@@ -161,14 +173,20 @@ export default function Home() {
               >
                 Explore Menu
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
 
-        {/* offer / menu categories */}
+        {/* offer / menu categories: عنوان بـ fadeDown، الكروت بتكبر (scaleIn) */}
         <div className="bg-white">
           <div className="py-10 sm:py-14 lg:py-16 px-4 sm:px-8 lg:px-15">
-            <div className="flex flex-col justify-center items-center">
+            <motion.div
+              className="flex flex-col justify-center items-center"
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportSettings}
+              variants={fadeDown}
+            >
               <h4 className="text-main-500 text-sm sm:text-lg lg:text-xl font-semibold tracking-wide py-2">
                 What We Offer
               </h4>
@@ -176,11 +194,19 @@ export default function Home() {
                 <span className="text-[#474747]">Browse Our</span>
                 <span className="text-main-500">Menu</span>
               </h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 py-8 sm:py-10">
+            </motion.div>
+
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 py-8 sm:py-10"
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportSettings}
+              variants={stagger(0.15)}
+            >
               {MENU_CATEGORIES.map((cat) => (
-                <div
+                <motion.div
                   key={cat.id}
+                  variants={scaleIn}
                   className="p-6 sm:p-8 group bg-white border border-gray-100 rounded-2xl shadow-sm flex
                   flex-col justify-center items-center hover:-translate-y-2 hover:shadow-md hover:border-main-200 transition-all duration-300 cursor-pointer"
                 >
@@ -203,18 +229,24 @@ export default function Home() {
                     {cat.buttonText}
                     <i className="fa-solid fa-arrow-right"></i>
                   </Link>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
 
         {/* about us */}
         <AboutUs></AboutUs>
 
-        {/* services */}
+        {/* services: الكروت بتتكشف زي ستارة (scaleIn) */}
         <div className="bg-bgMain py-10 sm:py-14 lg:py-16 px-4 sm:px-8 lg:px-15">
-          <div className="flex flex-col justify-center items-center py-2 sm:py-4 text-center">
+          <motion.div
+            className="flex flex-col justify-center items-center py-2 sm:py-4 text-center"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportSettings}
+            variants={fadeDown}
+          >
             <h4 className="text-main-500 text-sm sm:text-lg lg:text-xl font-semibold tracking-wide py-2">
               What We Provide
             </h4>
@@ -222,10 +254,18 @@ export default function Home() {
               <span className="text-[#474747]">Unique Services For</span>
               <span className="text-main-500">Your Events</span>
             </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 py-6">
+          </motion.div>
+
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 py-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportSettings}
+            variants={stagger(0.15)}
+          >
             {SERVICES.map((service) => (
-              <div
+              <motion.div
+                variants={scaleIn}
                 className="bg-white border border-gray-100 shadow-sm rounded-2xl overflow-hidden hover:-translate-y-2 hover:shadow-md transition-all duration-300"
                 key={service.id}
               >
@@ -242,15 +282,21 @@ export default function Home() {
                     {service.description}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
-        {/* Delivery */}
+        {/* Delivery: الصور بتتكشف زي ستارة (scaleIn)، النص بيبان ضبابي (fadeDown) */}
         <div className="bg-white grid grid-cols-1 lg:grid-cols-2 py-10 sm:py-14 lg:py-16 px-4 sm:px-8 lg:px-12 gap-8 lg:gap-10">
           {/* left */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportSettings}
+            variants={scaleIn}
+          >
             <div className="w-full sm:w-1/2">
               <img
                 src={chefImg}
@@ -271,9 +317,16 @@ export default function Home() {
                 className="w-full h-48 sm:h-79.5 lg:h-60 object-cover rounded-2xl hover:scale-105 transition-all duration-300"
               />
             </div>
-          </div>
+          </motion.div>
+
           {/* right */}
-          <div className="lg:px-8 flex flex-col items-center">
+          <motion.div
+            className="lg:px-8 flex flex-col items-center"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportSettings}
+            variants={fadeDown}
+          >
             <div className="w-full">
               <div>
                 <h5 className="text-main-500 font-semibold text-sm sm:text-base lg:text-[18px] uppercase py-2.5">
@@ -291,10 +344,17 @@ export default function Home() {
                   record time.
                 </p>
               </div>
-              <div className="py-5 flex flex-col gap-3 sm:gap-4">
+              <motion.div
+                className="py-5 flex flex-col gap-3 sm:gap-4"
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewportSettings}
+                variants={stagger(0.15)}
+              >
                 {DELIVERY_FEATURES.map((item) => (
-                  <div
+                  <motion.div
                     key={item.id}
+                    variants={rotateIn}
                     className="flex items-center gap-4 sm:gap-6 py-3 sm:py-4 group border border-transparent
    hover:border-main-200 hover:bg-main-500/5 px-4 sm:px-6 rounded-2xl lg:hover:translate-x-2 transition-all duration-300"
                   >
@@ -309,17 +369,23 @@ export default function Home() {
                     <h2 className="text-base sm:text-xl font-medium">
                       {item.title}
                     </h2>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        {/* order online */}
+        {/* order online: عنوان fadeDown، اللوجوهات بتكبر (scaleIn) */}
         <div className="py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-15 bg-bgMain flex flex-col lg:flex-row gap-6 lg:gap-5">
           {/* left */}
-          <div className="w-full lg:w-[30%] flex flex-col justify-center gap-4">
+          <motion.div
+            className="w-full lg:w-[30%] flex flex-col justify-center gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportSettings}
+            variants={fadeDown}
+          >
             <div>
               <h5 className="text-main-500 font-semibold text-sm sm:text-[14px] lg:text-[18px] uppercase py-2.5">
                 Order Online
@@ -334,14 +400,21 @@ export default function Home() {
                 food from the comfort of home.
               </p>
             </div>
-          </div>
+          </motion.div>
           <div className="lg:w-[70%] lg:px-10">
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 justify-center">
+            <motion.div
+              className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 justify-center"
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportSettings}
+              variants={stagger(0.15)}
+            >
               {DELIVERY_APPS.map((item) => (
-                <div
+                <motion.div
+                  key={item.id}
+                  variants={scaleIn}
                   className="bg-white p-5 sm:p-8 border border-gray-100 shadow-sm rounded-2xl text-center
                    hover:border-main-300 hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 cursor-pointer"
-                  key={item.id}
                 >
                   <div className="flex justify-center">
                     <img src={item.logo} alt={item.name} className="w-1/2" />
@@ -349,9 +422,9 @@ export default function Home() {
                   <h3 className="text-sm sm:text-lg lg:text-xl font-semibold py-2 sm:py-4">
                     {item.name}
                   </h3>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

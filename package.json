@@ -17,6 +17,7 @@
     "axios": "^1.18.0",
     "flowbite-react": "^0.12.17",
     "formik": "^2.4.9",
+    "framer-motion": "^13.1.1",
     "generate-react-cli": "^11.0.4",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

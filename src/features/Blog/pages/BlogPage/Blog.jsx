@@ -8,6 +8,16 @@ import ltbeta from "../../../../assets/images/5ltbeta (1).png";
 import potato from "../../../../assets/images/potato (1).png";
 import { TabItem, Tabs } from "flowbite-react";
 import { Helmet } from "react-helmet";
+import { AnimatePresence, motion } from "framer-motion";
+
+import {
+  fadeUp,
+  fadeLeft,
+  fadeRight,
+  scaleIn,
+  stagger,
+  viewportSettings,
+} from "../../../../lib/motionVariants";
 
 export function Blog() {
   const BLOG_CATEGORIES = [
@@ -21,7 +31,7 @@ export function Blog() {
   const BLOG_ARTICLES = [
     {
       id: 1,
-      image: `${past1}`,
+      image: past1,
       category: "Recipes",
       date: "January 3, 2024",
       title: "How to Prepare a Delicious Gluten-Free Sushi",
@@ -30,7 +40,7 @@ export function Blog() {
     },
     {
       id: 2,
-      image: `${pancake}`,
+      image: pancake,
       category: "Desserts",
       date: "January 15, 2024",
       title: "Exclusive Baking Lessons From the Pastry King",
@@ -39,7 +49,7 @@ export function Blog() {
     },
     {
       id: 3,
-      image: `${potato}`,
+      image: potato,
       category: "Cooking Tips",
       date: "January 22, 2024",
       title: "How to Prepare Perfect Fries in an Air Fryer",
@@ -48,7 +58,7 @@ export function Blog() {
     },
     {
       id: 4,
-      image: `${ltbeta}`,
+      image: ltbeta,
       category: "Healthy Eating",
       date: "February 1, 2024",
       title: "10 Superfoods to Add to Your Diet This Season",
@@ -57,7 +67,7 @@ export function Blog() {
     },
     {
       id: 5,
-      image: `${past1}`,
+      image: past1,
       category: "Recipes",
       date: "February 8, 2024",
       title: "The Secret Behind Our Signature Pasta Sauce",
@@ -66,7 +76,7 @@ export function Blog() {
     },
     {
       id: 6,
-      image: `${pancake}`,
+      image: pancake,
       category: "Cooking Tips",
       date: "February 14, 2024",
       title: "A Beginner's Guide to Wine Pairing With Food",
@@ -78,15 +88,16 @@ export function Blog() {
   const [blogCategoryDisplay, setBlogCategoryDisplay] = useState(BLOG_ARTICLES);
 
   function getBlogByCategory(category) {
-    const allBlogCatgory = structuredClone(BLOG_ARTICLES);
     if (category === "All") {
-      setBlogCategoryDisplay(allBlogCatgory);
+      setBlogCategoryDisplay(BLOG_ARTICLES);
       return;
     }
-    const fillterByCatgory = allBlogCatgory.filter(
+
+    const filterByCategory = BLOG_ARTICLES.filter(
       (blog) => blog.category === category,
     );
-    setBlogCategoryDisplay(fillterByCatgory);
+
+    setBlogCategoryDisplay(filterByCategory);
   }
 
   return (
@@ -94,7 +105,10 @@ export function Blog() {
       <Helmet>
         <title>Blog page</title>
       </Helmet>
+
       <section>
+        {/* ================= HEADER ================= */}
+
         <Header
           hightlight={"Latest Updates"}
           text={"our Blog & Articles"}
@@ -102,68 +116,150 @@ export function Blog() {
             "We consider all the drivers of change — giving you the insights you need to"
           }
           decripTwo={"stay ahead in the culinary world."}
-        ></Header>
+        />
 
-        {/* Featured article */}
+        {/* ================= FEATURED ARTICLE ================= */}
+        {/* القسم ده فوق خالص وظاهر من غير سكرول، فبيستخدم animate بدل whileInView
+            عشان يتحرك فورًا مع تحميل الصفحة */}
+
         <div className="py-10 sm:py-14 lg:py-16 px-4 sm:px-8 lg:px-15 bg-white">
-          <div className="pb-6">
+          {/* SECTION TITLE */}
+
+          <motion.div
+            className="pb-6"
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+          >
             <h5 className="font-bold text-sm text-main-500 tracking-widest uppercase">
               Featured
             </h5>
+
             <h3 className="font-bold text-xl sm:text-2xl py-1.5 leading-tight tracking-wide">
               Editor's Pick
             </h3>
-          </div>
+          </motion.div>
 
-          <div className="p-4 sm:p-8 border rounded-2xl border-gray-100 shadow-sm grid gap-3 grid-cols-1 lg:grid-cols-2">
-            {/* left */}
-            <div className="flex justify-center items-center py-3 sm:py-5">
-              <img
+          {/* FEATURED CARD */}
+
+          <motion.div
+            className="p-4 sm:p-8 border rounded-2xl border-gray-100 shadow-sm grid gap-3 grid-cols-1 lg:grid-cols-2 overflow-hidden"
+            initial="hidden"
+            animate="visible"
+            variants={stagger(0.15, 0.1)}
+          >
+            {/* IMAGE */}
+
+            <motion.div
+              className="flex justify-center items-center py-3 sm:py-5 overflow-hidden"
+              variants={fadeLeft}
+            >
+              <motion.img
                 src={pasta}
                 alt="pasta"
                 className="w-full lg:max-w-120 h-52 sm:h-72 lg:h-80 object-cover rounded-xl lg:rounded-none lg:px-4"
+                whileHover={{
+                  scale: 1.04,
+                }}
+                transition={{
+                  duration: 0.5,
+                  ease: "easeOut",
+                }}
               />
-            </div>
-            {/* right */}
-            <div className="px-1 sm:px-2 lg:px-0">
-              <h3 className="text-sm sm:text-[15px] lg:text-lg font-bold text-main-500">
+            </motion.div>
+
+            {/* CONTENT */}
+
+            <motion.div
+              className="px-1 sm:px-2 lg:px-0 flex flex-col justify-center"
+              variants={fadeRight}
+            >
+              <motion.h3
+                variants={fadeUp}
+                className="text-sm sm:text-[15px] lg:text-lg font-bold text-main-500"
+              >
                 Cooking Tips
-              </h3>
-              <h2 className="text-lg sm:text-xl py-1.5 lg:text-2xl font-bold leading-snug">
+              </motion.h3>
+
+              <motion.h2
+                variants={fadeUp}
+                className="text-lg sm:text-xl py-1.5 lg:text-2xl font-bold leading-snug"
+              >
                 The Art of French Cuisine: A Deep Dive Into Classic Techniques
-              </h2>
-              <span className="flex items-center gap-2 text-gray-400 text-xs font-medium py-2">
+              </motion.h2>
+
+              <motion.span
+                variants={fadeUp}
+                className="flex items-center gap-2 text-gray-400 text-xs font-medium py-2"
+              >
                 <i className="fa-regular fa-calendar"></i>
                 <span>February 10, 2024</span>
-              </span>
-              <p className="py-3 sm:py-4 text-gray-500 text-sm sm:text-base lg:text-lg">
+              </motion.span>
+
+              <motion.p
+                variants={fadeUp}
+                className="py-3 sm:py-4 text-gray-500 text-sm sm:text-base lg:text-lg"
+              >
                 French cuisine has long been considered the gold standard of
                 fine dining. From mastering the perfect béchamel to crafting an
                 elegant soufflé, we explore the foundational techniques every
                 food lover should know. Join our head chef as he walks you
                 through the essentials that transform a good cook into a great
                 one.
-              </p>
-              <button className="text-sm sm:text-base font-semibold border text-main-500 py-2 px-4 rounded-3xl border-main-500 hover:bg-main-500 hover:text-white transition-colors duration-300">
+              </motion.p>
+
+              <motion.button
+                variants={fadeUp}
+                whileHover={{
+                  scale: 1.03,
+                  x: 3,
+                }}
+                whileTap={{
+                  scale: 0.97,
+                }}
+                className="w-fit text-sm sm:text-base font-semibold border text-main-500 py-2 px-4 rounded-3xl border-main-500 hover:bg-main-500 hover:text-white transition-colors duration-300"
+              >
                 Read Article{" "}
-                <i className="fa-solid fa-arrow-right-long px-1"></i>
-              </button>
-            </div>
-          </div>
+                <motion.i
+                  className="fa-solid fa-arrow-right-long px-1 inline-block"
+                  whileHover={{ x: 4 }}
+                />
+              </motion.button>
+            </motion.div>
+          </motion.div>
         </div>
 
-        {/* All articles */}
+        {/* ================= ALL ARTICLES ================= */}
+        {/* القسم ده تحت وهيوصله المستخدم بالسكرول، فبيفضل يستخدم whileInView */}
+
         <div className="py-10 sm:py-14 lg:py-16 px-4 sm:px-8 lg:px-15 bg-bgMain">
-          <div className="text-center">
+          {/* SECTION TITLE */}
+
+          <motion.div
+            className="text-center"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportSettings}
+            variants={fadeUp}
+          >
             <h4 className="text-main-500 font-bold text-sm sm:text-[18px] leading-5">
               All Articles
             </h4>
+
             <h2 className="font-bold text-2xl lg:text-3xl leading-9">
               Fresh From The Kitchen
             </h2>
-          </div>
+          </motion.div>
 
-          <div className="py-3">
+          {/* CATEGORIES */}
+
+          <motion.div
+            className="py-3"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportSettings}
+            variants={fadeUp}
+          >
             <div className="flex justify-center py-3 overflow-x-auto">
               <Tabs
                 aria-label="Pills"
@@ -188,7 +284,7 @@ export function Blog() {
                   },
                 }}
               >
-                {BLOG_CATEGORIES?.map((blog) => (
+                {BLOG_CATEGORIES.map((blog) => (
                   <TabItem
                     key={blog}
                     title={blog}
@@ -198,45 +294,111 @@ export function Blog() {
               </Tabs>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 py-8 sm:py-10">
-              {blogCategoryDisplay?.map((article) => (
-                <div
-                  key={article.id}
-                  className="bg-white border border-gray-100 rounded-2xl group
-                   shadow-sm hover:shadow-xl hover:-translate-y-1 overflow-hidden transition-all duration-500"
-                >
-                  <div className="relative">
-                    <img
-                      src={article.image}
-                      alt={article.title}
-                      className="w-full h-52 sm:h-60 object-cover rounded-t-2xl group-hover:scale-105 transition-all duration-500"
-                    />
-                    <span className="absolute top-3 left-3 bg-main-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
-                      {article.category}
-                    </span>
-                  </div>
-                  <div className="p-4 sm:p-5">
-                    <p className="flex items-center gap-1.5 text-xs text-gray-400">
-                      <i className="fa-regular fa-calendar"></i>
-                      {article.date}
-                    </p>
-                    <h3 className="font-bold text-base sm:text-lg py-2 leading-snug">
-                      {article.title}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {article.description}
-                    </p>
-                    <a
-                      href="#"
-                      className="text-main-500 font-semibold text-sm py-3 inline-flex items-center gap-1 hover:gap-2 transition-all duration-300"
-                    >
-                      Read More <span aria-hidden="true">→</span>
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+            {/* ARTICLES */}
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={blogCategoryDisplay.map((article) => article.id).join("-")}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 py-8 sm:py-10"
+                initial="hidden"
+                animate="visible"
+                exit={{
+                  opacity: 0,
+                  y: 10,
+                  transition: {
+                    duration: 0.2,
+                  },
+                }}
+                variants={stagger(0.12)}
+              >
+                {blogCategoryDisplay.map((article) => (
+                  <motion.div
+                    key={article.id}
+                    variants={scaleIn}
+                    layout
+                    whileHover={{
+                      y: -8,
+                      transition: {
+                        duration: 0.25,
+                        ease: "easeOut",
+                      },
+                    }}
+                    className="bg-white border border-gray-100 rounded-2xl group shadow-sm hover:shadow-xl overflow-hidden transition-shadow duration-500"
+                  >
+                    {/* IMAGE */}
+
+                    <div className="relative overflow-hidden">
+                      <motion.img
+                        src={article.image}
+                        alt={article.title}
+                        className="w-full h-52 sm:h-60 object-cover rounded-t-2xl"
+                        whileHover={{
+                          scale: 1.08,
+                        }}
+                        transition={{
+                          duration: 0.5,
+                          ease: "easeOut",
+                        }}
+                      />
+
+                      <motion.span
+                        initial={{
+                          opacity: 0,
+                          y: -10,
+                        }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                        }}
+                        transition={{
+                          duration: 0.4,
+                          delay: 0.2,
+                        }}
+                        className="absolute top-3 left-3 bg-main-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full"
+                      >
+                        {article.category}
+                      </motion.span>
+                    </div>
+
+                    {/* CONTENT */}
+
+                    <div className="p-4 sm:p-5">
+                      <p className="flex items-center gap-1.5 text-xs text-gray-400">
+                        <i className="fa-regular fa-calendar"></i>
+                        {article.date}
+                      </p>
+
+                      <h3 className="font-bold text-base sm:text-lg py-2 leading-snug">
+                        {article.title}
+                      </h3>
+
+                      <p className="text-sm text-gray-500">
+                        {article.description}
+                      </p>
+
+                      <motion.a
+                        href="#"
+                        whileHover={{
+                          x: 4,
+                        }}
+                        className="text-main-500 font-semibold text-sm py-3 inline-flex items-center gap-1"
+                      >
+                        Read More
+                        <motion.span
+                          className="inline-block"
+                          whileHover={{
+                            x: 4,
+                          }}
+                        >
+                          →
+                        </motion.span>
+                      </motion.a>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
     </>
