@@ -1,6 +1,5 @@
 const EASE = [0.22, 1, 0.36, 1];
 
-// مدة واحدة موحّدة لكل أنواع الحركة، عشان الإيقاع يبقى متناسق
 const DURATION = 0.8;
 
 export const fadeUp = {

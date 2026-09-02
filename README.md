@@ -31,38 +31,79 @@ A full-featured restaurant web application built with React, where customers can
 | Notifications           | React Toastify       |
 | Routing                 | React Router         |
 | SEO / Meta Tags         | React Helmet         |
+| Animations              | Framer Motion        |
 
 ## Project Structure
 
 ```
 src/
+├── assets/
+│   └── images/                # Static images used across the app
+│
 ├── components/
 │   ├── Shared/
-│   │   ├── hooks/            # Shared read-only hooks (useMenu, useCategories)
+│   │   ├── Hooks/              # Shared read-only hooks (useMenu, useCategories)
 │   │   ├── header/
 │   │   ├── LoaderSpinner/
+│   │   ├── Scrolltotop/
 │   │   └── utils/
 │   │
-│   ├── menu/                 # Public menu page
-│   ├── meal/                 # Meal card component
-│   ├── CardDetails/           # Meal details page
-│   ├── MyBooking/             # Customer's bookings page
+│   ├── layout/
+│   ├── NavBar/
+│   ├── Footer/
 │   │
-│   ├── MenuAdmin/             # Admin: manage meals
-│   │   ├── hooks/
-│   │   └── FormAddMeal/
-│   ├── MangeCategories/       # Admin: manage categories
-│   │   └── hooks/
-│   ├── BookingsAdmin/         # Admin: manage bookings
-│   │   └── hooks/
-│   ├── BookingDetailsModel/
-│   │
-│   ├── Protect-route/         # Route protection (auth required)
+│   ├── Protect-route/          # Route protection (auth required)
 │   ├── ProtectRouteFromAdmin/
 │   ├── ProtectRoteLogged/
-│   └── NavBar/
+│   └── AdminProtectRoute/
 │
+├── features/
+│   ├── auth/
+│   │   └── Login/
+│   │
+│   ├── about/
+│   │   └── components/
+│   │       └── AboutUs/
+│   │
+│   ├── Blog/
+│   │
+│   ├── Contact/
+│   │
+│   ├── Home/
+│   │
+│   ├── meals/
+│   │   ├── services/            # menuServices (API calls)
+│   │   ├── menu/                # Public menu page
+│   │   └── meal/                # Meal card component
+│   │
+│   ├── bookings/
+│   │   ├── BookingTable/
+│   │   └── MyBooking/
+│   │
+│   ├── Dashboard/
+│   │   ├── MenuAdmin/           # Admin: manage meals
+│   │   │   ├── hooks/
+│   │   │   └── FormAddMeal/
+│   │   ├── MangeCategories/     # Admin: manage categories
+│   │   │   └── hooks/
+│   │   ├── BookingsAdmin/       # Admin: manage bookings
+│   │   │   └── hooks/
+│   │   └── BookingDetailsModel/
+│   │
+│   └── Messages/
+│
+├── lib/
+│   └── motionVariants.js        # Shared Framer Motion variants (fadeUp, fadeLeft,
+│                                 # fadeRight, scaleIn, rotateIn, stagger, viewportSettings)
+│
+├── layouts/
+├── pages/
+├── routes/
+│   └── AppRoutes.jsx
+│
+├── App.css
 ├── App.jsx
+├── index.css
 └── main.jsx
 ```
 
@@ -121,9 +162,13 @@ npm run build
 
 This project follows a shared-hooks pattern to avoid duplicated API logic:
 
-- **Read hooks** (e.g. `useMenu`, `useCategories`) live in `Shared/hooks/` and are used anywhere the data is needed (customer pages, admin pages).
+- **Read hooks** (e.g. `useMenu`, `useCategories`) live in `Shared/Hooks/` and are used anywhere the data is needed (customer pages, admin pages).
 - **Mutation hooks** (e.g. `useMenuAdmin`, `useCategoriesAdmin`, `useBookingsAdmin`) live inside their feature folder and handle create/update/delete operations, since they are only needed in the admin panel.
 - All hooks sharing the same `queryKey` automatically stay in sync via React Query's cache — an admin action (like deleting a meal) is instantly reflected on the customer-facing pages without extra code.
+
+## Animation Pattern
+
+All page-entrance animations use a shared set of Framer Motion variants defined in `src/lib/motionVariants.js` (`fadeUp`, `fadeLeft`, `fadeRight`, `scaleIn`, `rotateIn`, `stagger`, `viewportSettings`), so timing and easing stay consistent across every page instead of being redefined per component.
 
 ## Author
 
